@@ -1,11 +1,25 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, StatusBar } from 'react-native';
-import React, { useState, FC } from 'react';
+import React, { useState, FC, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import StudentAddPage from './Components/StudentAddPage';
 import StudentDetailsPage from './Components/StudentDetailsPage';
 import StudentListPage from './Components/StudentListPage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import apiClient from './api/ClientApi'
+
+const testConnection = async () => {
+  try {
+    const response = await apiClient.get('/'); // שלח בקשה ל-root URL
+    if (response.ok) {
+      console.log('חיבור לשרת הצליח:', response.data);
+    } else {
+      console.log('חיבור לשרת נכשל:', response.problem);
+    }
+  } catch (error) {
+    console.error('שגיאה בחיבור לשרת:', error);
+  }
+};
 
 // const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -22,7 +36,12 @@ const StudentsListScreen: FC = () => {
 }
 
 export default function App() {
+
+  useEffect(() => {
+    testConnection();
+  }, []);
   return (
+  
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen name="StudentsListScreen" component={StudentsListScreen} options={{ headerShown: false }} />
@@ -40,4 +59,6 @@ const styles = StyleSheet.create({
   },
 
 });
+
+
 
