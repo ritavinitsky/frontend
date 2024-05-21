@@ -5,7 +5,7 @@ export type User = {
     name: string,
     age: string,
     email: string,
-    imgUrl: string
+    //imgUrl: string
 }
 
 
@@ -21,7 +21,7 @@ const getAllStudents = async () => {
                     name: students.data[index].name,
                     age: students.data[index].age,
                     email: students.data[index].email,
-                    imgUrl: students.data[index].imgUrl
+                    //imgUrl: students.data[index].imgUrl
                 }
                 data.push(st)
             }

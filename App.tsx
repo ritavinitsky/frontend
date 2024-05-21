@@ -166,7 +166,7 @@ const testConnection = async () => {
 
 const Stack = createNativeStackNavigator();
 
-const MainScreen: FC = ({ navigation }) => {
+const MainScreen: FC<{ navigation: any }> = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Button
