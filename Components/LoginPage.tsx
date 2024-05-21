@@ -1,7 +1,7 @@
 import { useState, FC, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, TextInput, StatusBar, Button} from 'react-native';
 import LoginRegistrationModel from '../Model/LoginModel';
-import UserModel from '../Model/UserModel';
+import UserModel , {User} from '../Model/UserModel';
 
 
 const LoginPage: FC<{navigation: any}> = ({navigation}) => {
@@ -12,10 +12,10 @@ const LoginPage: FC<{navigation: any}> = ({navigation}) => {
     const onSave = async() => {
       const user = {
         email: email,
-        password: password,
+        password: password
       }
       const result: any = await LoginRegistrationModel.login(user.email, user.password)
-      if(result != null){
+      if(result.ok){
         console.log("logged in")
         navigation.goBack();
        //navigation.navigate("PostListPage", result)
@@ -24,6 +24,9 @@ const LoginPage: FC<{navigation: any}> = ({navigation}) => {
       }
           
     }
+
+    
+      
     return(    
     <View style={styles.container}>
         <TextInput
