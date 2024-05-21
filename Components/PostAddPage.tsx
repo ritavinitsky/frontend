@@ -1,18 +1,15 @@
 import { useState, FC, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, TextInput, StatusBar, Button} from 'react-native';
-import StudentModel, { User } from '../Model/UserModel';
+import {HeaderBackButton} from '@react-navigation/elements'
 import * as ImagePicker from 'expo-image-picker';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import LoginRegistrationModel from '../Model/LoginModel';
-import PostAddPage from './PostAddPage';
+import PostModel, { Post } from '../Model/PostModel';
 
 
-const StudentAddPage: FC<{navigation: any}> = ({navigation}) => {
+const PostAddPage: FC<{route: any, navigation: any}> = ({navigation, route}) => {
 
-    const [name, onChangeName] = useState('');
-    const [age, onChangeAge] = useState('');
-    const [password, onChangePassword] = useState('');
-    const [email, onChangeEmail] = useState('');
+    const [title, onChangeTitle] = useState('');
+    const [txt, onChangeTxt] = useState('');
     const [avatarUri, setAvatarUri] = useState('');
 
     const askPermission = async () => {
@@ -54,39 +51,50 @@ const StudentAddPage: FC<{navigation: any}> = ({navigation}) => {
 
     useEffect(() => {
       askPermission()
+      navigation.setOptions({
+        headerLeft:(props: any) => (
+          <HeaderBackButton {...props} onPress={() => navigation.navigate("PostListPage", {refreshToken: route.params.refreshToken, userID: route.params.userID})}/>
+        )
+      })
     }, [])
   
+    const onCancel = () => {
+      navigation.navigate("PostListPage", {refreshToken: route.params.refreshToken, userID: route.params.userID})
+    }
     const onSave = async() => {
       console.log(avatarUri)
-      let user = {
-        name: name,
-        age: age,
-        email: email,
-        password: password,
-        //imgUrl: "url"
+      let post:Post = {
+        creator_id: route.params.userID,
+        post_title: title,
+        post_text: txt,
+        imgUrl: avatarUri,
+        id: ''
       }
       try {
         if(avatarUri != ""){
           console.log("uploading image")
-          const url = await StudentModel.uploadImage(avatarUri)
-          //user.imgUrl = url
+          const url = await PostModel.uploadImage(avatarUri)
+          post.imgUrl = url
         }
       }catch(err){
         console.log(err)
       }
-      const result: string = await LoginRegistrationModel.registration(user);
-      if(result != null){
-        console.log("registered")
-        //navigation.navigate("StudentListPage", result)
-        navigation.goBack();
-      }else{
-        Alert.alert("Login Error:", "Your email or password are incorrect")
-      }
+      const result = await PostModel.addPost(post, route.params.refreshToken);
+      console.log(result)
+      if(result)
+        navigation.navigate("PostListPage", {refreshToken: result.refreshToken, userID: route.params.userID})
+      else
+        Alert.alert("Something gone wrong while creating this post. Please try again")
     }
     return(    
     <View style={styles.container}>
 
-      <View>
+        <TextInput
+          style={styles.input}
+          onChangeText={onChangeTitle}
+          placeholder='Enter your Title'
+        />
+        <View>
         {avatarUri == "" && <Image style={styles.avatar} source={require('../assets/avatar.jpeg')}/>}
         {avatarUri != "" && <Image style={styles.avatar} source={{uri: avatarUri}}/>}
         <TouchableOpacity onPress={openGallery}>
@@ -95,33 +103,20 @@ const StudentAddPage: FC<{navigation: any}> = ({navigation}) => {
         <TouchableOpacity onPress={openCamera}>
           <Ionicons name={"camera"} style={styles.cameraButton} size={50}/>
         </TouchableOpacity>
+        </View>
         
-      </View>
         
         <TextInput
           style={styles.input}
-          onChangeText={onChangeName}
-          value={name}
-          placeholder='Enter your name'
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeAge}
-          placeholder='Enter your age'
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeEmail}
-          placeholder='Enter your email'
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangePassword}
-          placeholder='Enter your password'
+          onChangeText={onChangeTxt}
+          placeholder='Enter your Text'
         />
         <View style={styles.buttons}>
+          <TouchableOpacity style={styles.button} onPress={onCancel}>
+            <Text style={styles.button}>CANCEL</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={onSave}>
-            <Text style={styles.button}>REGISTER</Text>
+            <Text style={styles.button}>SAVE</Text>
           </TouchableOpacity>
         </View>
   
@@ -156,7 +151,7 @@ const styles = StyleSheet.create({
     cameraButton: {
       position: 'absolute',
       bottom: -10,
-      left: 10,
+      left: 100,
       width: 50,
       height: 50,
     },
@@ -183,4 +178,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default StudentAddPage;
+export default PostAddPage;

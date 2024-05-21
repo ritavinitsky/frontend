@@ -15,9 +15,10 @@ const LoginPage: FC<{navigation: any}> = ({navigation}) => {
         password: password
       }
       const result: any = await LoginRegistrationModel.login(user.email, user.password)
-      if(result.ok){
+      console.log(result)
+      if(result != false){
         console.log("logged in")
-        navigation.goBack();
+        navigation.navigate('PostAddPage');
        //navigation.navigate("PostListPage", result)
       }else{
         Alert.alert("Login Error:", "Your email or password are incorrect")

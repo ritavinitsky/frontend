@@ -3,6 +3,7 @@ import React, { useState, FC, useEffect } from 'react';
 import StudentModel from '../Model/StudentModel';
 
 
+
 const StudentDetailsPage: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
     const student = StudentModel.getStudent(route.params.id);
     useEffect(() => {

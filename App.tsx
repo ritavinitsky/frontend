@@ -150,6 +150,8 @@ import StudentAddPage from './Components/StudentAddPage';
 import LoginPage from './Components/LoginPage';
 import RegisterPage from './Components/RegisterPage';
 import apiClient from './api/ClientApi';
+import PostAddPage from './Components/PostAddPage';
+
 
 const testConnection = async () => {
   try {
@@ -204,6 +206,12 @@ const App = () => {
           component={RegisterPage}
           options={{ title: 'Register' }}
         />
+        <Stack.Screen
+          name="PostAddPage"
+          component={PostAddPage}
+          options={{ title: 'Add Post' }}
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
