@@ -10,7 +10,7 @@ const PostAddPage: FC<{route: any, navigation: any}> = ({navigation, route}) => 
 
     const [title, onChangeTitle] = useState('');
     const [txt, onChangeTxt] = useState('');
-    const [avatarUri, setAvatarUri] = useState('');
+    //const [avatarUri, setAvatarUri] = useState('');
 
     const askPermission = async () => {
       try {
@@ -29,7 +29,7 @@ const PostAddPage: FC<{route: any, navigation: any}> = ({navigation, route}) => 
         const res = await ImagePicker.launchCameraAsync()
         if(!res.canceled && res.assets.length>0){
           const uri = res.assets[0].uri
-          setAvatarUri(uri)
+          //setAvatarUri(uri)
         }
       }catch(err){
         console.log("open camera error: " + err)
@@ -42,7 +42,7 @@ const PostAddPage: FC<{route: any, navigation: any}> = ({navigation, route}) => 
         const res = await ImagePicker.launchImageLibraryAsync()
         if(!res.canceled && res.assets.length>0){
           const uri = res.assets[0].uri
-          setAvatarUri(uri)
+          //setAvatarUri(uri)
         }
       }catch(err){
         console.log("open camera error: " + err)
@@ -62,23 +62,23 @@ const PostAddPage: FC<{route: any, navigation: any}> = ({navigation, route}) => 
       navigation.navigate("PostListPage", {refreshToken: route.params.refreshToken, userID: route.params.userID})
     }
     const onSave = async() => {
-      console.log(avatarUri)
+      //console.log(avatarUri)
       let post:Post = {
         creator_id: route.params.userID,
         post_title: title,
         post_text: txt,
-        imgUrl: avatarUri,
+        //imgUrl: '',
         id: ''
       }
-      try {
-        if(avatarUri != ""){
-          console.log("uploading image")
-          const url = await PostModel.uploadImage(avatarUri)
-          post.imgUrl = url
-        }
-      }catch(err){
-        console.log(err)
-      }
+      //try {
+      //  if(avatarUri != ""){
+       //   console.log("uploading image")
+       //   const url = await PostModel.uploadImage(avatarUri)
+       //   post.imgUrl = url
+       // }
+    //  }catch(err){
+    //    console.log(err)
+     // }
       const result = await PostModel.addPost(post, route.params.refreshToken);
       console.log(result)
       if(result)
@@ -94,17 +94,8 @@ const PostAddPage: FC<{route: any, navigation: any}> = ({navigation, route}) => 
           onChangeText={onChangeTitle}
           placeholder='Enter your Title'
         />
-        <View>
-        {avatarUri == "" && <Image style={styles.avatar} source={require('../assets/avatar.jpeg')}/>}
-        {avatarUri != "" && <Image style={styles.avatar} source={{uri: avatarUri}}/>}
-        <TouchableOpacity onPress={openGallery}>
-          <Ionicons name={"image"} style={styles.cameraButton} size={50}/>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={openCamera}>
-          <Ionicons name={"camera"} style={styles.cameraButton} size={50}/>
-        </TouchableOpacity>
-        </View>
         
+       
         
         <TextInput
           style={styles.input}

@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { FlatList, Text, StyleSheet, Button } from "react-native";
-import StudentListRow from "./StudentListRow";
+import StudentListRaw from "./StudentListRaw";
 import StudentModel, { Student } from "../Model/StudentModel";
 
 const StudentListPage: FC<{ navigation: any }> = ({ navigation }) => {
@@ -36,7 +36,7 @@ const StudentListPage: FC<{ navigation: any }> = ({ navigation }) => {
             data={data}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-                <StudentListRow
+                <StudentListRaw
                     name={item.name}
                     id={item.id}
                     imgUrl={item.imgUrl}

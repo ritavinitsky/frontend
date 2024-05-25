@@ -3,7 +3,7 @@ import React, { useState, FC } from 'react';
 
 
 
-const StudentListRow: FC<{
+const StudentListRaw: FC<{
     name: string,
     id: string,
     imgUrl: string,
@@ -55,4 +55,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default StudentListRow;
+export default StudentListRaw;

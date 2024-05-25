@@ -1,7 +1,9 @@
-import UserApi from "../api/UserApi"
+/*import UserApi from "../api/UserApi"
+import apiClient from "../api/ClientApi";
 import FormData from 'form-data';
 
 export type User = {
+    id:string,
     name: string,
     age: string,
     email: string,
@@ -35,7 +37,7 @@ const getAllStudents = async () => {
     
     
 }
-
+ /*
 const getUserById = async(id: string, refreshToken: string) => {
     try{
         const user: any = await UserApi.getUser(id, refreshToken)
@@ -48,7 +50,49 @@ const getUserById = async(id: string, refreshToken: string) => {
     }
     
 }
+*/
 
+/*
+
+const getUserById = async (userId: string, refreshToken: string): Promise<{ currentUser: User } | null> => {
+    try {
+      const response = await apiClient.get(`/user/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${refreshToken}`
+        }
+      });
+  
+      if (response.ok && response.data) {
+        const currentUser = response.data as User;
+        return { currentUser };
+      } else {
+        console.error("Failed to fetch user:", response.problem);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      return null;
+    }
+  };
+
+const updateUser = async (user: User, refreshToken: string, userID: string) => {
+    console.log("addStudent")
+    const data = {id: userID.toString(), name: user.name, age: user.age, email: user.email, imgUrl: user.imgUrl}
+    try {
+        const res = await UserApi.updateUser(data, refreshToken) 
+        if(!res){
+            console.log("adding student failed")
+        }
+        else{
+            console.log("adding student was successful")
+            return res.refreshToken
+        }
+    } catch (error) {
+        console.log(error)
+    }
+    
+}
+*/
 // const addStudent = async (student: User) => {
 //     console.log("addStudent")
 //     const data = {_id: student.id, name: student.name, imgUrl: student.imgUrl}
@@ -72,6 +116,7 @@ const getUserById = async(id: string, refreshToken: string) => {
 //         data.splice(index, 1)
 // }
 
+/*
 const uploadImage = async(imageURI: String) => {
         var body = new FormData();
         body.append('file', {name: "name",type: 'image/jpeg',"uri": imageURI});
@@ -93,4 +138,37 @@ const uploadImage = async(imageURI: String) => {
         
 }
 
-export default {getUserById, uploadImage}
+export default {getUserById, uploadImage, updateUser}
+*/
+import apiClient from '../api/ClientApi';
+
+export interface User {
+    id: string;
+    name: string;
+    age: number;
+    email: string;
+}
+
+const getUserById = async (userId: string, refreshToken: string): Promise<{ currentUser: User } | null> => {
+  try {
+    console.log("trying get user")
+    const response = await apiClient.get(`/user/${userId}`, {
+      headers: {
+        'Authorization': `Bearer ${refreshToken}`
+      }
+    });
+
+    if (response.ok && response.data) {
+      const currentUser = response.data as User;
+      return { currentUser };
+    } else {
+      console.error("Failed to fetch user:", response.problem);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return null;
+  }
+};
+
+export default { getUserById };

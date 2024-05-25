@@ -6,7 +6,7 @@ export type Post = {
     creator_id: string,
     post_title: string,
     post_text: string,
-    imgUrl: string,
+    //imgUrl: string,
     id: string
 }
 
@@ -22,7 +22,7 @@ const getAllPosts = async (refreshToken: string) => {
                     creator_id: posts.Posts[index].creator_id,
                     post_title: posts.Posts[index].post_title,
                     post_text: posts.Posts[index].post_text,
-                    imgUrl: posts.Posts[index].imgUrl,
+                    //imgUrl: posts.Posts[index].imgUrl,
                     id: posts.Posts[index]._id
                 }
                 data.push(pst)
@@ -42,7 +42,7 @@ const getPost = async(id: string, refreshToken: string) => {
         creator_id: '0',
         post_title: '0',
         post_text: '0',
-        imgUrl: '0',
+        //imgUrl: '0',
         id: '0'}
     try {
         const post: any = await PostApi.getSpecificPost(refreshToken, id)
@@ -52,7 +52,7 @@ const getPost = async(id: string, refreshToken: string) => {
                 creator_id: post.result.creator_id,
                 post_title: post.result.post_title,
                 post_text: post.result.post_text,
-                imgUrl: post.result.imgUrl,
+                //imgUrl: post.result.imgUrl,
                 id: post.result._id
             }
             console.log(pst)

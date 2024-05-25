@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
 });
 
 */
-
+/*
 import { StyleSheet, View, StatusBar, Text, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -151,6 +151,8 @@ import LoginPage from './Components/LoginPage';
 import RegisterPage from './Components/RegisterPage';
 import apiClient from './api/ClientApi';
 import PostAddPage from './Components/PostAddPage';
+import PostListPage from './Components/PostListPage';
+import UserProfilePage from './Components/UserProfilePage';
 
 
 const testConnection = async () => {
@@ -211,7 +213,115 @@ const App = () => {
           component={PostAddPage}
           options={{ title: 'Add Post' }}
         />
+        <Stack.Screen
+          name="PostListPage"
+          component={PostListPage}
+          options={{ title: 'All Posts' }}
+        />
+        <Stack.Screen
+          name="UserProfilePage"
+          component={UserProfilePage}
+          options={{ title: 'All Profile' }}
+        />
+        
 
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: StatusBar.currentHeight,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+});
+
+export default App;
+*/
+
+import { StyleSheet, View, StatusBar, Button } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { FC, useEffect } from 'react';
+import LoginPage from './Components/LoginPage';
+import RegisterPage from './Components/RegisterPage';
+import PostAddPage from './Components/PostAddPage';
+import PostListPage from './Components/PostListPage';
+import UserProfilePage from './Components/UserProfilePage';
+import apiClient from './api/ClientApi';
+
+const testConnection = async () => {
+  try {
+    const response = await apiClient.get('/');
+    if (response.ok) {
+      console.log('חיבור לשרת הצליח:', response.data);
+    } else {
+      console.log('חיבור לשרת נכשל:', response.problem);
+    }
+  } catch (error) {
+    console.error('שגיאה בחיבור לשרת:', error);
+  }
+};
+
+const Stack = createNativeStackNavigator();
+
+const MainScreen: FC<{ navigation: any }> = ({ navigation }) => {
+  return (
+    <View style={styles.container}>
+      <Button
+        title="Login"
+        onPress={() => navigation.navigate('LoginPage')}
+      />
+      <Button
+        title="Register"
+        onPress={() => navigation.navigate('RegisterPage')}
+      />
+    </View>
+  );
+};
+
+const App = () => {
+  useEffect(() => {
+    testConnection();
+  }, []);
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="MainScreen">
+        <Stack.Screen
+          name="MainScreen"
+          component={MainScreen}
+          options={{ title: 'Welcome' }}
+        />
+        <Stack.Screen
+          name="LoginPage"
+          component={LoginPage}
+          options={{ title: 'Login' }}
+        />
+        <Stack.Screen
+          name="RegisterPage"
+          component={RegisterPage}
+          options={{ title: 'Register' }}
+        />
+        <Stack.Screen
+          name="PostAddPage"
+          component={PostAddPage}
+          options={{ title: 'Add Post' }}
+        />
+        <Stack.Screen
+          name="PostListPage"
+          component={PostListPage}
+          options={{ title: 'All Posts' }}
+        />
+        <Stack.Screen
+          name="UserProfilePage"
+          component={UserProfilePage}
+          options={{ title: 'User Profile' }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
