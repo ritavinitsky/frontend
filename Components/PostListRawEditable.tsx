@@ -8,26 +8,27 @@ const PostListRawEditable: FC<{
     id: string,
     user_name: string,
     onItemSelected: (id: string) => void,
-    onItemDeleted: (id: string) => void
-}> = ({user_name, post_title, post_text, imgURL, id, onItemSelected, onItemDeleted}) => {
+    onItemDeleted: (id: string) => void,
+    onItemChanged: (id: string, post_title_: string, post_text: string) => void
+}> = ({user_name, post_title, post_text, imgURL, id, onItemSelected, onItemDeleted, onItemChanged}) => {
 
 const onPress = () => {
     onItemSelected(id)
 }
   return(
-    <TouchableHighlight onPress={onPress}
-    underlayColor={'grey'}>
-        <View style={styles.listrow}>
+    <View style={styles.listrow}>
         <Button onPress={() => onItemDeleted(id) } title="Delete"  />
-            <Text style={styles.name}>{post_title}</Text>
-            <TextInput style={styles.input} onChangeText={onChangeEmail} value={email} placeholder='Enter your Email'/>
-            <Text style={styles.name}>User Name: {user_name}</Text>
+        <Button onPress={() => onItemChanged(id, document.getElementById('post_title_'+id).value, document.getElementById('post_text_'+id).value) } title="Save"  />
+        
+        <TextInput id={"post_title_"+id} style={styles.input} defaultValue={post_title}  />
+        <Text style={styles.name}>User Name: {user_name}</Text>
+        
+        {imgURL == "url" && <Image style={styles.post_image} source={require('../assets/avatar.jpeg')}/>}
+        {imgURL != "url" && <Image style={styles.post_image} source={{uri: imgURL}}/>}
             
-            {imgURL == "url" && <Image style={styles.post_image} source={require('../assets/avatar.jpeg')}/>}
-            {imgURL != "url" && <Image style={styles.post_image} source={{uri: imgURL}}/>}
-            <Text numberOfLines={2} style={styles.id}>{post_text}</Text>  
-        </View>
-    </TouchableHighlight>
+        <TextInput id={"post_text_"+id} style={styles.input} defaultValue={post_text} />
+
+    </View>
   )
 }
 
@@ -62,7 +63,14 @@ const styles = StyleSheet.create({
     fontSize:20,
     borderColor: 'black',
     alignSelf: 'flex-start'
-  }
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  },
+
 
 });
 

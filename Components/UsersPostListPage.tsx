@@ -18,6 +18,11 @@ const UsersPostListPage: FC<{route:any, navigation: any, }> = ({navigation, rout
         console.log(posts)
         setData(posts.Posts)
     }
+    const onItemChanged = async (id: string, post_title: string, post_text: string) => {
+        console.log('Item changed: ' + id + " " + post_title + " " + post_text);
+        const res: any = await PostModel.updatePost({post_title: post_title, post_text: post_text}, route.params.refreshToken, id);
+    }
+    
     let refToken = ''
     useEffect(()=>{
         const unsubsribe = navigation.addListener('focus',async()=>{
@@ -46,7 +51,7 @@ const UsersPostListPage: FC<{route:any, navigation: any, }> = ({navigation, rout
             data = {data}
             keyExtractor={(item) => item.id}
             renderItem={({item}) => (
-                <PostListRawEditable user_name={item.user_name} post_title={item.post_title} post_text={item.post_text} imgURL={item.imgUrl} id={item.id} onItemSelected={onItemSelected} onItemDeleted={onItemDeleted}/>
+                <PostListRawEditable user_name={item.user_name} post_title={item.post_title} post_text={item.post_text} imgURL={item.imgUrl} id={item.id} onItemSelected={onItemSelected} onItemDeleted={onItemDeleted} onItemChanged={onItemChanged}/>
             )}
         />
     )
