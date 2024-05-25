@@ -73,7 +73,7 @@ export default UserDetailsPage;
 
 import React, {FC, useState, useEffect } from 'react';
 
-import { StyleSheet, Text, View, Button, StatusBar, ActivityIndicator, Alert } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Button, StatusBar, ActivityIndicator, Alert } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import UserModel, { User } from '../Model/UserModel';
 import UserApi from '../api/UserApi';
@@ -116,11 +116,15 @@ const UserProfilePage: FC<{route:any, navigation: any, }> = ({navigation, route}
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Email: {email}</Text>
-      <Text style={styles.label}>Name: {name}</Text>
-      <Text style={styles.label}>Age: {age}</Text>
+      <Text style={styles.label}>Email:</Text>
+      <TextInput style={styles.input} onChangeText={onChangeEmail} value={email} placeholder='Enter your Email'/>
+      <Text style={styles.label}>Name:</Text>
+      <TextInput style={styles.input} onChangeText={onChangeName} value={name} placeholder='Enter your Name'/>
+      <Text style={styles.label}>Age:</Text>
+      <TextInput style={styles.input} onChangeText={onChangeAge} value={age} placeholder='Enter your Age'/>
       
       <Button title="Back" onPress={() => navigation.goBack()} />
+      <Button title="Save" onPress={() => UserApi.updateUser({"id": route.params.user_id, "email": email, "name": name, "age": age}, route.params.refreshToken)} />
     </View>
   );
 };
@@ -140,6 +144,12 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 18,
     marginBottom: 10,
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
   },
 });
 

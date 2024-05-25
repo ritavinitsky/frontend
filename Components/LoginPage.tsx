@@ -18,8 +18,8 @@ const LoginPage: FC<{navigation: any}> = ({navigation}) => {
       console.log(result)
       if(result != false){
         console.log("logged in")
-        //navigation.navigate('PostListPage');
-        navigation.navigate("UserProfilePage", result)
+        navigation.navigate('PostListPage');
+        //navigation.navigate("UserProfilePage", result)
       }else{
         Alert.alert("Login Error:", "Your email or password are incorrect")
       }
