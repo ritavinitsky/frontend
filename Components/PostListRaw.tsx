@@ -6,8 +6,9 @@ const PostListRaw: FC<{
     post_text:string, 
     imgURL: string,
     id: string,
+    user_name: string,
     onItemSelected: (id: string) => void
-}> = ({post_title, post_text, imgURL, id, onItemSelected}) => {
+}> = ({user_name, post_title, post_text, imgURL, id, onItemSelected}) => {
 
 const onPress = () => {
     onItemSelected(id)
@@ -17,6 +18,7 @@ const onPress = () => {
     underlayColor={'grey'}>
         <View style={styles.listrow}>
             <Text style={styles.name}>{post_title}</Text>
+            <Text style={styles.name}>User Name: {user_name}</Text>
             {imgURL == "url" && <Image style={styles.post_image} source={require('../assets/avatar.jpeg')}/>}
             {imgURL != "url" && <Image style={styles.post_image} source={{uri: imgURL}}/>}
             <Text numberOfLines={2} style={styles.id}>{post_text}</Text>  

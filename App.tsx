@@ -252,6 +252,7 @@ import RegisterPage from './Components/RegisterPage';
 import PostAddPage from './Components/PostAddPage';
 import PostListPage from './Components/PostListPage';
 import UserProfilePage from './Components/UserProfilePage';
+import UsersPostListPage from './Components/UsersPostListPage';
 import apiClient from './api/ClientApi';
 
 const testConnection = async () => {
@@ -321,6 +322,11 @@ const App = () => {
           name="UserProfilePage"
           component={UserProfilePage}
           options={{ title: 'User Profile' }}
+        />
+         <Stack.Screen
+          name="UsersPostListPage"
+          component={UsersPostListPage}
+          options={{ title: 'User\'s Post List Page' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

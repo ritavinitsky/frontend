@@ -8,13 +8,15 @@ const PostListPage: FC<{route:any, navigation: any, }> = ({navigation, route}) =
     const [data, setData] = useState<Post[]>([])
     const onItemSelected = (id: string) => {
         console.log('Item selected' + id)
-        navigation.navigate('PostDetailsPage', {id: id, refreshToken: route.params.refreshToken, userID: route.params.userID});
+        navigation.navigate('PostDetailsPage', {id: id, refreshToken: route.params.refreshToken, userID: route.params.user_id});
     }
     let refToken = ''
     useEffect(()=>{
         const unsubsribe = navigation.addListener('focus',async()=>{
         try{
             const posts: any = await PostModel.getAllPosts(route.params.refreshToken)
+
+            console.log(posts)
             setData(posts.Posts)
             navigation.setParams({refreshToken: posts.refreshToken})
         }catch(err){
@@ -64,7 +66,7 @@ const PostListPage: FC<{route:any, navigation: any, }> = ({navigation, route}) =
             data = {data}
             keyExtractor={(item) => item.id}
             renderItem={({item}) => (
-                <PostListRaw post_title={item.post_title} post_text={item.post_text} imgURL={item.imgUrl} id={item.id} onItemSelected={onItemSelected}/>
+                <PostListRaw user_name={item.user_name} post_title={item.post_title} post_text={item.post_text} imgURL={item.imgUrl} id={item.id} onItemSelected={onItemSelected}/>
             )}
         />
     )

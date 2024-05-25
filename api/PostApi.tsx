@@ -1,17 +1,30 @@
 import apiClient from "./ClientApi";
+import UserApi from "./UserApi";
 
 const getAllPosts = async (refreshToken: string) => {
-    apiClient.setHeader('Authorization', 'Bearer ' + refreshToken)
+    apiClient.setHeader('authorization', 'Bearer ' + refreshToken)
     const data: any = await apiClient.get('/auth/refresh')
-    apiClient.setHeader('Authorization', 'Bearer ' + data.data['accessToken'])
+    apiClient.setHeader('authorization', 'Bearer ' + data.data['accessToken'])
     const res: any = await apiClient.get('/post')
-    return {Posts: res.data, refreshToken: data.data.refreshToken}
+    var posts = res.data;
+    
+    return {Posts: posts, refreshToken: data.data.refreshToken}
+}
+
+const getUserPosts = async (creator_id: string, refreshToken: string) => {
+    apiClient.setHeader('authorization', 'Bearer ' + refreshToken)
+    const data: any = await apiClient.get('/auth/refresh')
+    apiClient.setHeader('authorization', 'Bearer ' + data.data['accessToken'])
+    const res: any = await apiClient.get('/post', {creator_id: creator_id})
+    var posts = res.data;
+    
+    return {Posts: posts, refreshToken: data.data.refreshToken}
 }
 
 const getSpecificPost = async(refreshToken: string, post_id: string) => {
-    apiClient.setHeader('Authorization', 'Bearer ' + refreshToken)
+    apiClient.setHeader('authorization', 'Bearer ' + refreshToken)
     const data: any = await apiClient.get('/auth/refresh')
-    apiClient.setHeader('Authorization', 'Bearer ' + data.data['accessToken'])
+    apiClient.setHeader('authorization', 'Bearer ' + data.data['accessToken'])
     const res: any = await apiClient.get('/post/' + post_id)
     console.log(res.data)
     if(res.ok){
@@ -61,6 +74,7 @@ const uploadImage = async(image: any) => {
 
 export default {
     getAllPosts,
+    getUserPosts,
     addPost,
     getSpecificPost,
     deletePost,

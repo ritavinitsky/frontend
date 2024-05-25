@@ -1,5 +1,5 @@
 import PostApi from "../api/PostApi";
-import StudentApi from "../api/UserApi"
+import UserApi from "../api/UserApi"
 import FormData from 'form-data';
 
 export type Post = {
@@ -7,7 +7,8 @@ export type Post = {
     post_title: string,
     post_text: string,
     //imgUrl: string,
-    id: string
+    id: string,
+    user_name: string
 }
 
 
@@ -25,6 +26,8 @@ const getAllPosts = async (refreshToken: string) => {
                     //imgUrl: posts.Posts[index].imgUrl,
                     id: posts.Posts[index]._id
                 }
+                const user = await UserApi.getUser(pst.creator_id, refreshToken);
+                pst.user_name = user.currentUser.name;
                 data.push(pst)
             }
         }
@@ -33,8 +36,32 @@ const getAllPosts = async (refreshToken: string) => {
         console.log("Fail reading posts from server: " + error)
     }
     return data
-    
-    
+}
+
+const getUserPosts = async (creator_id: string, refreshToken: string) => {
+    console.log("getUserPosts")
+    let data = Array<Post>()
+    try {
+        const posts: any = await PostApi.getUserPosts(creator_id, refreshToken)
+        if(posts.Posts){
+            for (let index = 0; index < posts.Posts.length; index++) {
+                const pst: Post = {
+                    creator_id: posts.Posts[index].creator_id,
+                    post_title: posts.Posts[index].post_title,
+                    post_text: posts.Posts[index].post_text,
+                    //imgUrl: posts.Posts[index].imgUrl,
+                    id: posts.Posts[index]._id
+                }
+                const user = await UserApi.getUser(pst.creator_id, refreshToken);
+                pst.user_name = user.currentUser.name;
+                data.push(pst)
+            }
+        }
+        return {Posts: data, refreshToken: posts.refreshToken}
+    } catch (error) {
+        console.log("Fail reading posts from server: " + error)
+    }
+    return data
 }
 
 const getPost = async(id: string, refreshToken: string) => {
@@ -118,7 +145,7 @@ const uploadImage = async(imageURI: String) => {
         var body = new FormData();
         body.append('file', {name: "name",type: 'image/jpeg',"uri": imageURI});
         try{
-            const res = await StudentApi.uploadImage(body)
+            const res = await UserApi.uploadImage(body)
             if(!res.ok){
                 console.log("save failed " + res.problem)
             }else{
@@ -135,4 +162,4 @@ const uploadImage = async(imageURI: String) => {
         
 }
 
-export default {getAllPosts, uploadImage, getPost, addPost, deletePost, updatePost}
+export default {getAllPosts, getUserPosts, uploadImage, getPost, addPost, deletePost, updatePost}
