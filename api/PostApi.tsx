@@ -1,9 +1,16 @@
 import apiClient from "./ClientApi";
 import UserApi from "./UserApi";
+import { MainRefreshToken } from "../App";
 
 const getAllPosts = async (refreshToken: string) => {
+    if(MainRefreshToken.refreshToken != ""){
+        console.log("using MainRefreshToken " + MainRefreshToken.refreshToken);
+        refreshToken = MainRefreshToken.refreshToken;
+    }
+    console.log("getAllPosts API refreshToken: " + refreshToken)
     apiClient.setHeader('authorization', 'Bearer ' + refreshToken)
     const data: any = await apiClient.get('/auth/refresh')
+    MainRefreshToken.refreshToken = data.data.refreshToken;
     apiClient.setHeader('authorization', 'Bearer ' + data.data['accessToken'])
     const res: any = await apiClient.get('/post')
     var posts = res.data;
@@ -12,8 +19,13 @@ const getAllPosts = async (refreshToken: string) => {
 }
 
 const getUserPosts = async (creator_id: string, refreshToken: string) => {
+    if(MainRefreshToken.refreshToken != ""){
+        console.log("using MainRefreshToken " + MainRefreshToken.refreshToken);
+        refreshToken = MainRefreshToken.refreshToken;
+    }
     apiClient.setHeader('authorization', 'Bearer ' + refreshToken)
     const data: any = await apiClient.get('/auth/refresh')
+    MainRefreshToken.refreshToken = data.data.refreshToken;
     apiClient.setHeader('authorization', 'Bearer ' + data.data['accessToken'])
     const res: any = await apiClient.get('/post', {creator_id: creator_id})
     var posts = res.data;
@@ -21,22 +33,14 @@ const getUserPosts = async (creator_id: string, refreshToken: string) => {
     return {Posts: posts, refreshToken: data.data.refreshToken}
 }
 
-const getSpecificPost = async(refreshToken: string, post_id: string) => {
-    apiClient.setHeader('authorization', 'Bearer ' + refreshToken)
-    const data: any = await apiClient.get('/auth/refresh')
-    apiClient.setHeader('authorization', 'Bearer ' + data.data['accessToken'])
-    const res: any = await apiClient.get('/post/' + post_id)
-    console.log(res.data)
-    if(res.ok){
-        return {result: res.data, refreshToken: data.data.refreshToken}
-    }
-    return false
-        
-}
-
 const addPost = async (post: any, refreshToken: string) => {
+    if(MainRefreshToken.refreshToken != ""){
+        console.log("using MainRefreshToken " + MainRefreshToken.refreshToken);
+        refreshToken = MainRefreshToken.refreshToken;
+    }
     apiClient.setHeader('Authorization', 'Bearer ' + refreshToken)
     const data: any = await apiClient.get('/auth/refresh')
+    MainRefreshToken.refreshToken = data.data.refreshToken;
     apiClient.setHeader('Authorization', 'Bearer ' + data.data.accessToken)
     const res: any = await apiClient.post('/post', post)
     if(res.ok){
@@ -46,8 +50,13 @@ const addPost = async (post: any, refreshToken: string) => {
 }
 
 const deletePost = async(postID: string, refreshToken: string) => {
+    if(MainRefreshToken.refreshToken != ""){
+        console.log("using MainRefreshToken " + MainRefreshToken.refreshToken);
+        refreshToken = MainRefreshToken.refreshToken;
+    }
     apiClient.setHeader('Authorization', 'Bearer ' + refreshToken)
     const data: any = await apiClient.get('/auth/refresh')
+    MainRefreshToken.refreshToken = data.data.refreshToken;
     console.log(data.data)
     apiClient.setHeader('Authorization', 'Bearer ' + data.data.accessToken)
     const res: any = await apiClient.delete('/post/' + postID)
@@ -57,8 +66,13 @@ const deletePost = async(postID: string, refreshToken: string) => {
 }
 
 const updatePost = async(post: any, refreshToken: string, postID: string) => {
+    if(MainRefreshToken.refreshToken != ""){
+        console.log("using MainRefreshToken " + MainRefreshToken.refreshToken);
+        refreshToken = MainRefreshToken.refreshToken;
+    }
     apiClient.setHeader('Authorization', 'Bearer ' + refreshToken)
     const data: any = await apiClient.get('/auth/refresh')
+    MainRefreshToken.refreshToken = data.data.refreshToken;
     console.log(data.data)
     apiClient.setHeader('Authorization', 'Bearer ' + data.data.accessToken)
     const res: any = await apiClient.put('/post/' + postID,  post)
@@ -76,7 +90,6 @@ export default {
     getAllPosts,
     getUserPosts,
     addPost,
-    getSpecificPost,
     deletePost,
     updatePost,
     uploadImage

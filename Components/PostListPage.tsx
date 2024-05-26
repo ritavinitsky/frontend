@@ -14,6 +14,8 @@ const PostListPage: FC<{route:any, navigation: any, }> = ({navigation, route}) =
     useEffect(()=>{
         const unsubsribe = navigation.addListener('focus',async()=>{
         try{
+            console.log("refreshToken: " + route.params.refreshToken);
+            console.log(route.params);
             const posts: any = await PostModel.getAllPosts(route.params.refreshToken)
 
             console.log(posts)

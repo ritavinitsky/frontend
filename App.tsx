@@ -1,251 +1,7 @@
-/*import { StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, StatusBar } from 'react-native';
-import React, { useState, FC, useEffect } from 'react';
+/*import { StyleSheet, View, StatusBar, Button, ScrollView, SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import StudentAddPage from './Components/StudentAddPage';
-import StudentDetailsPage from './Components/StudentDetailsPage';
-import StudentListPage from './Components/StudentListPage';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import apiClient from './api/ClientApi'
-
-const testConnection = async () => {
-  try {
-    const response = await apiClient.get('/'); // שלח בקשה ל-root URL
-    if (response.ok) {
-      console.log('חיבור לשרת הצליח:', response.data);
-    } else {
-      console.log('חיבור לשרת נכשל:', response.problem);
-    }
-  } catch (error) {
-    console.error('שגיאה בחיבור לשרת:', error);
-  }
-};
-
-// const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
-const StudentsListStack = createNativeStackNavigator();
-
-const StudentsListScreen: FC = () => {
-  return (
-    <StudentsListStack.Navigator>
-      <StudentsListStack.Screen name="StudentListPage" component={StudentListPage} options={{ title: 'Students List' }} />
-      <StudentsListStack.Screen name="StudentDetailsPage" component={StudentDetailsPage} options={{ title: 'Student Details' }} />
-      <StudentsListStack.Screen name="StudentAddPage" component={StudentAddPage} options={{ title: 'Add New Student' }} />
-    </StudentsListStack.Navigator>
-  );
-}
-
-export default function App() {
-
-  useEffect(() => {
-    testConnection();
-  }, []);
-  return (
-  
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="StudentsListScreen" component={StudentsListScreen} options={{ headerShown: false }} />
-        <Tab.Screen name="StudentAddPage" component={StudentAddPage} options={{ title: 'Add New Student' }} />
-      </Tab.Navigator>
-    </NavigationContainer >
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: StatusBar.currentHeight,
-    flex: 1,
-    flexDirection: 'column',
-  },
-
-});
-
-
-
-*/
-
-/*
-import { StyleSheet, View, StatusBar, Text, Button} from 'react-native';
-//import PostListPage from './Components/PostListPage';
-import { NavigationContainer } from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack'
-import { FC,useEffect } from 'react';
-import StudentAddPage from './Components/StudentAddPage';
-//import PostDetailsPage from './Components/PostDetailsPage';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import LoginPage from './Components/LoginPage';
-import RegisterPage from './Components/RegisterPage';
-//import PostAddPage from './Components/PostAddPage';
-//import PostEditPage from './Components/PostEditPage';
-import apiClient from './api/ClientApi'
-
-
-const testConnection = async () => {
-  try {
-    const response = await apiClient.get('/'); // שלח בקשה ל-root URL
-    if (response.ok) {
-      console.log('חיבור לשרת הצליח:', response.data);
-    } else {
-      console.log('חיבור לשרת נכשל:', response.problem);
-    }
-  } catch (error) {
-    console.error('שגיאה בחיבור לשרת:', error);
-  }
-}; 
-
-//const Stack = createNativeStackNavigator()
-const Tab = createBottomTabNavigator()
-const StudentListStack = createNativeStackNavigator()
-
-const TestFunctions: FC = () => {
-  return(
-    <View>
-      <Text>PostList</Text>
-    </View>
-  )
-}
-
-const StudentListScreen: FC = () => {
-  return (
-    <StudentListStack.Navigator>
-      <StudentListStack.Screen name="LoginPage" component={LoginPage} options={{title: 'Login'}}/>
-      <StudentListStack.Screen name="RegisterPage" component={RegisterPage} options={{title: 'Register'}}/>
-    </StudentListStack.Navigator>
-  );
-}
-
-export default function App() {
-
-  useEffect(() => {
-    testConnection();
-  }, []);
-
-  return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <StudentListStack.Screen name="StudentListScreen" component={StudentListScreen} options={{title: 'Login', headerShown: false}}/>
-        <StudentListStack.Screen name="RegisterPage" component={RegisterPage} options={{title: 'Register'}}/>
-      </Tab.Navigator>
-    </NavigationContainer>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: StatusBar.currentHeight,
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: '#fff',
-  },
-
-});
-
-*/
-/*
-import { StyleSheet, View, StatusBar, Text, Button } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { FC, useEffect } from 'react';
-import StudentAddPage from './Components/StudentAddPage';
-import LoginPage from './Components/LoginPage';
-import RegisterPage from './Components/RegisterPage';
-import apiClient from './api/ClientApi';
-import PostAddPage from './Components/PostAddPage';
-import PostListPage from './Components/PostListPage';
-import UserProfilePage from './Components/UserProfilePage';
-
-
-const testConnection = async () => {
-  try {
-    const response = await apiClient.get('/'); // שלח בקשה ל-root URL
-    if (response.ok) {
-      console.log('חיבור לשרת הצליח:', response.data);
-    } else {
-      console.log('חיבור לשרת נכשל:', response.problem);
-    }
-  } catch (error) {
-    console.error('שגיאה בחיבור לשרת:', error);
-  }
-};
-
-const Stack = createNativeStackNavigator();
-
-const MainScreen: FC<{ navigation: any }> = ({ navigation }) => {
-  return (
-    <View style={styles.container}>
-      <Button
-        title="Login"
-        onPress={() => navigation.navigate('LoginPage')}
-      />
-      <Button
-        title="Register"
-        onPress={() => navigation.navigate('RegisterPage')}
-      />
-    </View>
-  );
-};
-
-const App = () => {
-  useEffect(() => {
-    testConnection();
-  }, []);
-
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="MainScreen">
-        <Stack.Screen
-          name="MainScreen"
-          component={MainScreen}
-          options={{ title: 'Welcome' }}
-        />
-        <Stack.Screen
-          name="LoginPage"
-          component={LoginPage}
-          options={{ title: 'Login' }}
-        />
-        <Stack.Screen
-          name="RegisterPage"
-          component={RegisterPage}
-          options={{ title: 'Register' }}
-        />
-        <Stack.Screen
-          name="PostAddPage"
-          component={PostAddPage}
-          options={{ title: 'Add Post' }}
-        />
-        <Stack.Screen
-          name="PostListPage"
-          component={PostListPage}
-          options={{ title: 'All Posts' }}
-        />
-        <Stack.Screen
-          name="UserProfilePage"
-          component={UserProfilePage}
-          options={{ title: 'All Profile' }}
-        />
-        
-
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: StatusBar.currentHeight,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-});
-
-export default App;
-*/
-
-import { StyleSheet, View, StatusBar, Button } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { FC, useEffect } from 'react';
 import LoginPage from './Components/LoginPage';
 import RegisterPage from './Components/RegisterPage';
@@ -269,21 +25,51 @@ const testConnection = async () => {
 };
 
 const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
+
+const MainRefreshToken = { refreshToken: "" };
 
 const MainScreen: FC<{ navigation: any }> = ({ navigation }) => {
   return (
-    <View style={styles.container}>
-      <Button
-        title="Login"
-        onPress={() => navigation.navigate('LoginPage')}
-      />
-      <Button
-        title="Register"
-        onPress={() => navigation.navigate('RegisterPage')}
-      />
-    </View>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.buttonContainer}>
+          <Button
+            title="Login"
+            onPress={() => navigation.navigate('LoginPage')}
+          />
+          <Button
+            title="Register"
+            onPress={() => navigation.navigate('RegisterPage')}
+          />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
+
+const DrawerNavigator: FC<{route: any, navigation: any }> = ({ navigation, route }) => (
+  <Drawer.Navigator initialRouteName="PostListPage">
+    <Drawer.Screen
+      name="PostListPage"
+      component={PostListPage}
+      options={{ title: 'All Posts' }}
+      initialParams={route.params}
+    />
+    <Drawer.Screen
+      name="UserProfilePage"
+      component={UserProfilePage}
+      options={{ title: 'User Profile' }}
+      initialParams={route.params}
+    />
+    <Drawer.Screen
+      name="UsersPostListPage"
+      component={UsersPostListPage}
+      options={{ title: 'User\'s Post List' }}
+      initialParams={route.params}
+    />
+  </Drawer.Navigator>
+);
 
 const App = () => {
   useEffect(() => {
@@ -309,24 +95,9 @@ const App = () => {
           options={{ title: 'Register' }}
         />
         <Stack.Screen
-          name="PostAddPage"
-          component={PostAddPage}
-          options={{ title: 'Add Post' }}
-        />
-        <Stack.Screen
-          name="PostListPage"
-          component={PostListPage}
-          options={{ title: 'All Posts' }}
-        />
-        <Stack.Screen
-          name="UserProfilePage"
-          component={UserProfilePage}
-          options={{ title: 'User Profile' }}
-        />
-         <Stack.Screen
-          name="UsersPostListPage"
-          component={UsersPostListPage}
-          options={{ title: 'User\'s Post List Page' }}
+          name="DrawerNavigator"
+          component={DrawerNavigator}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>
@@ -334,13 +105,165 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: StatusBar.currentHeight,
+  safeArea: {
     flex: 1,
+    backgroundColor: '#fff',
+  },
+  scrollContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    paddingVertical: 20,
+  },
+  buttonContainer: {
+    width: '100%',
+    alignItems: 'center',
   },
 });
 
+export { MainRefreshToken };
+export default App;
+*/
+
+import { StyleSheet, View, StatusBar, Button, ScrollView, SafeAreaView, Text, TouchableOpacity } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { FC, useEffect } from 'react';
+import LoginPage from './Components/LoginPage';
+import RegisterPage from './Components/RegisterPage';
+import PostAddPage from './Components/PostAddPage';
+import PostListPage from './Components/PostListPage';
+import UserProfilePage from './Components/UserProfilePage';
+import UsersPostListPage from './Components/UsersPostListPage';
+import apiClient from './api/ClientApi';
+
+const testConnection = async () => {
+  try {
+    const response = await apiClient.get('/');
+    if (response.ok) {
+      console.log('חיבור לשרת הצליח:', response.data);
+    } else {
+      console.log('חיבור לשרת נכשל:', response.problem);
+    }
+  } catch (error) {
+    console.error('שגיאה בחיבור לשרת:', error);
+  }
+};
+
+const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
+
+const MainRefreshToken = { refreshToken: "" };
+
+const MainScreen: FC<{ navigation: any }> = ({ navigation }) => {
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('LoginPage')}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('RegisterPage')}>
+            <Text style={styles.buttonText}>Register</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
+const DrawerNavigator: FC<{ route: any, navigation: any }> = ({ navigation, route }) => (
+  <Drawer.Navigator initialRouteName="PostListPage">
+    <Drawer.Screen
+      name="PostListPage"
+      component={PostListPage}
+      options={{ title: 'All Posts' }}
+      initialParams={route.params}
+    />
+    <Drawer.Screen
+      name="UserProfilePage"
+      component={UserProfilePage}
+      options={{ title: 'User Profile' }}
+      initialParams={route.params}
+    />
+    <Drawer.Screen
+      name="UsersPostListPage"
+      component={UsersPostListPage}
+      options={{ title: 'User\'s Post List' }}
+      initialParams={route.params}
+    />
+  </Drawer.Navigator>
+);
+
+const App = () => {
+  useEffect(() => {
+    testConnection();
+  }, []);
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="MainScreen">
+        <Stack.Screen
+          name="MainScreen"
+          component={MainScreen}
+          options={{ title: 'Welcome' }}
+        />
+        <Stack.Screen
+          name="LoginPage"
+          component={LoginPage}
+          options={{ title: 'Login' }}
+        />
+        <Stack.Screen
+          name="RegisterPage"
+          component={RegisterPage}
+          options={{ title: 'Register' }}
+        />
+        <Stack.Screen
+          name="DrawerNavigator"
+          component={DrawerNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="PostAddPage"
+          component={PostAddPage}
+          options={{ title: 'Post Add Page' }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
+  buttonContainer: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  button: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginVertical: 10,
+    width: '80%',
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
+
+export { MainRefreshToken };
 export default App;
