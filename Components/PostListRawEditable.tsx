@@ -76,6 +76,8 @@ const styles = StyleSheet.create({
 
 export default PostListRawEditable;
 */
+
+/*
 import React, { FC } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, Button, TouchableOpacity } from 'react-native';
 
@@ -156,6 +158,102 @@ const styles = StyleSheet.create({
   userName: {
     marginBottom: 10,
     fontSize: 12,
+    fontWeight: 'bold',
+  },
+  input: {
+    height: 50,
+    width: '100%',
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    paddingHorizontal: 15,
+    backgroundColor: '#fff',
+  },
+});
+
+export default PostListRawEditable;
+*/
+import React, { FC } from 'react';
+import { StyleSheet, Text, View, Image, TextInput, Button, TouchableOpacity } from 'react-native';
+
+const PostListRawEditable: FC<{
+  post_title: string,
+  post_text: string,
+  imgURL: string,
+  id: string,
+  user_name: string,
+  onItemSelected: (id: string) => void,
+  onItemDeleted: (id: string) => void,
+  onItemChanged: (id: string, post_title_: string, post_text: string) => void
+}> = ({ user_name, post_title, post_text, imgURL, id, onItemSelected, onItemDeleted, onItemChanged }) => {
+
+  const handleSave = () => {
+    const titleElement = document.getElementById(`post_title_${id}`) as HTMLInputElement;
+    const textElement = document.getElementById(`post_text_${id}`) as HTMLInputElement;
+    if (titleElement && textElement) {
+      onItemChanged(id, titleElement.value, textElement.value);
+    }
+  };
+
+  return (
+    <View style={styles.listRow}>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={() => onItemDeleted(id)}>
+          <Text style={styles.buttonText}>Delete</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleSave}>
+          <Text style={styles.buttonText}>Save</Text>
+        </TouchableOpacity>
+      </View>
+      <TextInput id={`post_title_${id}`} style={styles.input} defaultValue={post_title} placeholder="Enter Title" />
+      <Text style={styles.userName}>by: {user_name}</Text>
+      {imgURL === "url" 
+        ? <Image style={styles.postImage} source={require('../assets/avatar.jpeg')} />
+        : <Image style={styles.postImage} source={{ uri: imgURL }} />}
+      <TextInput id={`post_text_${id}`} style={styles.input} defaultValue={post_text} placeholder="Enter Text" />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  listRow: {
+    marginHorizontal: 10,
+    flexDirection: 'column',
+    elevation: 2,
+    borderRadius: 10,
+    marginVertical: 10,
+    alignItems: 'center',
+    backgroundColor: '#f9f9f9',
+    padding: 20,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 10,
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: 5,
+    backgroundColor: '#007bff',
+    paddingVertical: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  postImage: {
+    marginVertical: 1,
+    height: 1,
+    width: 1,
+    borderRadius: 10,
+  },
+  userName: {
+    marginBottom: 10,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   input: {

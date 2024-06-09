@@ -49,6 +49,24 @@ const addPost = async (post: any, refreshToken: string) => {
     return false
 }
 
+const getSpecificPost = async(refreshToken: string, post_id: string) => {
+    if(MainRefreshToken.refreshToken != ""){
+        console.log("using MainRefreshToken " + MainRefreshToken.refreshToken);
+        refreshToken = MainRefreshToken.refreshToken;
+    }
+    apiClient.setHeader('Authorization', 'Bearer ' + refreshToken)
+    const data: any = await apiClient.get('/auth/refresh')
+    MainRefreshToken.refreshToken = data.data.refreshToken;
+    apiClient.setHeader('Authorization', 'Bearer ' + data.data['accessToken'])
+    const res: any = await apiClient.get('/post/' + post_id)
+    console.log(res.data)
+    if(res.ok){
+        return {result: res.data, refreshToken: data.data.refreshToken}
+    }
+    return false
+        
+}
+
 const deletePost = async(postID: string, refreshToken: string) => {
     if(MainRefreshToken.refreshToken != ""){
         console.log("using MainRefreshToken " + MainRefreshToken.refreshToken);
@@ -92,5 +110,6 @@ export default {
     addPost,
     deletePost,
     updatePost,
+    getSpecificPost,
     uploadImage
 }

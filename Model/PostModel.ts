@@ -92,6 +92,7 @@ const getPost = async(id: string, refreshToken: string) => {
     return defPost
 }
 
+
 const addPost = async (post: Post, refreshToken: string) => {
     console.log("addPost")
     const data = {creator_id: post.creator_id, post_title: post.post_title, imgUrl: post.imgUrl, post_text: post.post_text}
