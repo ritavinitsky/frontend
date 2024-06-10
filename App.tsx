@@ -281,6 +281,9 @@ import UserProfilePage from './Components/UserProfilePage';
 import UsersPostListPage from './Components/UsersPostListPage';
 import apiClient from './api/ClientApi';
 import ComingSoon from './Components/ComingSoon';
+import Timers from './Components/TimersPage';
+import Terms from './Components/TermsPage';
+import Calculators from './Components/CalculatorsPage';
 
 const testConnection = async () => {
   try {
@@ -353,7 +356,7 @@ const DrawerNavigator: FC<{ route: any, navigation: any }> = ({ navigation, rout
 
     <Drawer.Screen
       name="Fasting"
-      component={ComingSoon}
+      component={Timers}
       options={{ title: 'צום לסירוגין' }}
       initialParams={route.params}
     />
@@ -365,13 +368,13 @@ const DrawerNavigator: FC<{ route: any, navigation: any }> = ({ navigation, rout
     />
     <Drawer.Screen
       name="Calculators"
-      component={ComingSoon}
+      component={Calculators}
       options={{ title: 'מחשבונים' }}
       initialParams={route.params}
     />
     <Drawer.Screen
       name="About"
-      component={ComingSoon}
+      component={Terms}
       options={{ title: 'תקנון' }}
       initialParams={route.params}
     />
