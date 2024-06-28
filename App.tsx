@@ -284,6 +284,7 @@ import ComingSoon from './Components/ComingSoon';
 import Timers from './Components/TimersPage';
 import Terms from './Components/TermsPage';
 import Calculators from './Components/CalculatorsPage';
+import Program from './Components/BuildingProgramPage';
 
 const testConnection = async () => {
   try {
@@ -370,6 +371,12 @@ const DrawerNavigator: FC<{ route: any, navigation: any }> = ({ navigation, rout
       name="Calculators"
       component={Calculators}
       options={{ title: 'מחשבונים' }}
+      initialParams={route.params}
+    />
+     <Drawer.Screen
+      name="Program"
+      component={Program}
+      options={{ title: 'יצירת תכנית' }}
       initialParams={route.params}
     />
     <Drawer.Screen
