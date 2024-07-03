@@ -421,6 +421,11 @@ const App = () => {
           component={PostAddPage}
           options={{ title: 'הוספת פוסט' }}
         />
+         <Stack.Screen
+          name="Program"
+          component={Program}
+          options={{ title: 'יצירת תכנית' }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

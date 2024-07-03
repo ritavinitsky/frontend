@@ -147,6 +147,7 @@ export interface User {
     name: string;
     age: number;
     email: string;
+    dailyCal: string;
 }
 
 const getUserById = async (userId: string, refreshToken: string): Promise<{ currentUser: User } | null> => {

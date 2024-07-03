@@ -108,8 +108,11 @@ const styles = StyleSheet.create({
 export default Program;
 */
 
-import React, { FC, useState } from 'react';
+
+
+import React, { FC, useState,useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import UserApi from '../api/UserApi';
 
 const Program: FC<{ route: any, navigation: any }> = ({ navigation, route }) => {
   const [gender, setGender] = useState<string>('');
@@ -168,7 +171,32 @@ const Program: FC<{ route: any, navigation: any }> = ({ navigation, route }) => 
     const dailyCaloricIntake = (totalCaloriesNeeded - totalCaloricDeficit) / (7 * targetTimeNum);
 
     setDailyCalories(dailyCaloricIntake);
+    
   };
+
+  useEffect(() => {
+    calculateCalories();
+    
+  }, []);
+
+
+  const user = route.params.user;
+  const onSave = async () => {
+    calculateCalories();
+    const result = await UserApi.updateUser(
+      { id: route.params.user_id, email:route.params.email, name:route.params.name, age:route.params.name, dailyCal:dailyCalories },
+      route.params.refreshToken
+    );
+    if (result ) {
+      console.log( 'הפרופיל עודכן בהצלחה');
+    } else {
+      console.log('שגיאה');
+    }
+    };
+
+
+  
+
 
   return (
     <View style={styles.container}>
@@ -193,7 +221,7 @@ const Program: FC<{ route: any, navigation: any }> = ({ navigation, route }) => 
       <Text>זמן יעד (שבועות):</Text>
       <TextInput style={styles.input} value={targetTime} onChangeText={setTargetTime} keyboardType="numeric" />
       
-      <Button title="שלח" onPress={calculateCalories} />
+      <Button title="שלח" onPress={onSave} />
       
       {dailyCalories !== null && (
         <Text>צריכת קלוריות יומית: {dailyCalories.toFixed(2)} קלוריות</Text>

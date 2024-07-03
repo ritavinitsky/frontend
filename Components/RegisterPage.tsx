@@ -583,6 +583,7 @@ import StudentModel, { User } from '../Model/UserModel';
 import * as ImagePicker from 'expo-image-picker';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import LoginRegistrationModel from '../Model/LoginModel';
+import Program from './BuildingProgramPage';
 
 const StudentAddPage: FC<{ navigation: any }> = ({ navigation }) => {
   const [name, onChangeName] = useState('');
@@ -642,6 +643,7 @@ const StudentAddPage: FC<{ navigation: any }> = ({ navigation }) => {
       age: age,
       email: email,
       password: password,
+      dailyCal:'0',
     };
     /*
     try {
@@ -657,10 +659,16 @@ const StudentAddPage: FC<{ navigation: any }> = ({ navigation }) => {
     const result: string = await LoginRegistrationModel.registration(user);
     if (result != null) {
       console.log("registered");
-      navigation.goBack();
+      const result1: any = await LoginRegistrationModel.login(user.email, user.password);
+      if (result1 !== false) {
+        console.log("logged in");
+        //navigation.navigate('DrawerNavigator', result);
+      } 
     } else {
       Alert.alert("שגיאת רישום:", "אירעה שגיאה בעת הרישום.");
     }
+    navigation.navigate('Program', {name: user.name, age:user.age, email:user.email, password: user.password, dailyCal: user.dailyCal});
+
   };
 
   return (

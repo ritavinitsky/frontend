@@ -349,6 +349,7 @@ const UserProfilePage: FC<{ route: any, navigation: any }> = ({ navigation, rout
   const [name, onChangeName] = useState('');
   const [age, onChangeAge] = useState('');
   const [email, onChangeEmail] = useState('');
+  
 
   useEffect(() => {
     const fetchUserProfile = async () => {
