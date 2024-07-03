@@ -310,10 +310,10 @@ const MainScreen: FC<{ navigation: any }> = ({ navigation }) => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('LoginPage')}>
-            <Text style={styles.buttonText}>Login</Text>
+            <Text style={styles.buttonText}>התחברות</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('RegisterPage')}>
-            <Text style={styles.buttonText}>Register</Text>
+            <Text style={styles.buttonText}>הרשמה</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -399,17 +399,17 @@ const App = () => {
         <Stack.Screen
           name="MainScreen"
           component={MainScreen}
-          options={{ title: 'Welcome' }}
+          options={{ title: 'ברוכים הבאים' }}
         />
         <Stack.Screen
           name="LoginPage"
           component={LoginPage}
-          options={{ title: 'Login' }}
+          options={{ title: 'התחברות' }}
         />
         <Stack.Screen
           name="RegisterPage"
           component={RegisterPage}
-          options={{ title: 'Register' }}
+          options={{ title: 'הרשמה' }}
         />
         <Stack.Screen
           name="DrawerNavigator"
@@ -419,7 +419,7 @@ const App = () => {
          <Stack.Screen
           name="PostAddPage"
           component={PostAddPage}
-          options={{ title: 'Add post' }}
+          options={{ title: 'הוספת פוסט' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
