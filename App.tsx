@@ -280,6 +280,7 @@ import PostListPage from './Components/PostListPage';
 import UserProfilePage from './Components/UserProfilePage';
 import UsersPostListPage from './Components/UsersPostListPage';
 import apiClient from './api/ClientApi';
+import FoodMenu from './Components/FoodMenu';
 import ComingSoon from './Components/ComingSoon';
 import Timers from './Components/TimersPage';
 import Terms from './Components/TermsPage';
@@ -363,7 +364,7 @@ const DrawerNavigator: FC<{ route: any, navigation: any }> = ({ navigation, rout
     />
     <Drawer.Screen
       name="Recipes"
-      component={ComingSoon}
+      component={FoodMenu}
       options={{ title: 'מתכונים' }}
       initialParams={route.params}
     />
