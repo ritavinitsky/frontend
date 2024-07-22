@@ -31,8 +31,8 @@ const FoodMenu: FC<{ route: any, navigation: any }> = ({ navigation, route }) =>
                     <View style={styles.recipeContainer}>
                         <Image source={{ uri:"../assets"+"/"+ item.img }} style={styles.image} />
                         <Text style={styles.recipeName}>{item.name}</Text>
-                        <Text style={styles.recipeDetail}><b>מרכיבים:</b> {item.ingredients}</Text>
-                        <Text style={styles.recipeDetail}><b>הוראות:</b> {item.instructions}</Text>
+                        <Text style={styles.recipeDetail}><b>מרכיבים:</b> <br />{item.ingredients}</Text>
+                        <Text style={styles.recipeDetail}><b>הוראות:</b> <br /> {item.instructions}</Text>
                     </View>
                 )}
             />
