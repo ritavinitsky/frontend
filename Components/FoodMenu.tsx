@@ -7,7 +7,7 @@ const FoodMenu: FC<{ route: any, navigation: any }> = ({ navigation, route }) =>
     useEffect(() => {
         const fetchRecipes = async () => {
             try {
-                const response = await fetch('http://localhost:3000/api/recipes'); // Ensure this matches the backend URL
+                const response = await fetch('https://backend-69iy.onrender.com/api/recipes'); // Ensure this matches the backend URL
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }

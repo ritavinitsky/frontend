@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "frontend",
-    "slug": "frontend",
+    "slug": "eat-and-fit",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,27 +12,30 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ritavinitsky.eatandfit"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.ritavinitsky.eatandfit"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "56f8ac11-c660-41ac-ac37-4dd9620be331"
+        "projectId": "b11ac790-8ea0-4660-a22e-1d29c9984a8b"
       }
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/56f8ac11-c660-41ac-ac37-4dd9620be331"
-    }
+      "url": "https://u.expo.dev/b11ac790-8ea0-4660-a22e-1d29c9984a8b"
+    },
+    "owner": "ritavinitsky"
   }
 }

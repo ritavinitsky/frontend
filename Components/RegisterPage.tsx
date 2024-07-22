@@ -7,6 +7,7 @@ const StudentAddPage: FC<{ navigation: any }> = ({ navigation }) => {
   const [password, onChangePassword] = useState('');
   const [email, onChangeEmail] = useState('');
 
+
   const onSave = async () => {
     const user = {
         name,
@@ -17,7 +18,7 @@ const StudentAddPage: FC<{ navigation: any }> = ({ navigation }) => {
     };
 
     try {
-        const response = await fetch('http://localhost:3000/auth/register', {
+        const response = await fetch('http://backend-69iy.onrender.com/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(user),
