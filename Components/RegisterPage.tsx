@@ -7,7 +7,6 @@ const StudentAddPage: FC<{ navigation: any }> = ({ navigation }) => {
   const [password, onChangePassword] = useState('');
   const [email, onChangeEmail] = useState('');
 
-
   const onSave = async () => {
     const user = {
         name,
@@ -42,9 +41,16 @@ const StudentAddPage: FC<{ navigation: any }> = ({ navigation }) => {
         }
 
         if (response.status === 200) {
+            let user_id = result.user_id;
+            console.log("user_id: " + user_id);
+            
             // Registration successful
             alert("Registered successfully");
-            navigation.navigate('Program', { name: user.name, age: user.age, email: user.email, password: user.password, dailyCal: user.dailyCal });
+            navigation.navigate('Program', { 
+              accessToken: result.accessToken, 
+              refreshToken: result.refreshToken, 
+              user_id: result.user_id 
+             });
         } else if (response.status === 409) {
             Alert.alert("Registration Error", result.message || "Email already exists");
         } else {

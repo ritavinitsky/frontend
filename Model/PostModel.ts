@@ -27,8 +27,10 @@ const getAllPosts = async (refreshToken: string) => {
                     id: posts.Posts[index]._id
                 }
                 const user = await UserApi.getUser(pst.creator_id, refreshToken);
-                pst.user_name = user.currentUser.name;
-                data.push(pst)
+                if(user.currentUser != null){
+                    pst.user_name = user.currentUser.name;
+                    data.push(pst);
+                }
             }
         }
         return {Posts: data, refreshToken: posts.refreshToken}

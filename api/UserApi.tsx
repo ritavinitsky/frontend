@@ -15,33 +15,11 @@ const getAllStudents = async () => {
 */
 
 
-/*const getUser = async (id: string, refreshToken: string) => {
-    apiClient.setHeader('Authorization', 'Bearer ' + refreshToken)
-    const data: any = await apiClient.get('/user/' + id)
-    apiClient.setHeader('Authorization', 'Bearer ' + data.data['accessToken'])
-    return data.data;
-    //return await apiClient.get('/user/' + id)
+  
 
-}
-*/
 
-/*
-const getUser = async(refreshToken: string, id: string) => {
-    apiClient.setHeader('Authorization', 'Bearer ' + refreshToken)
-    const data: any = await apiClient.get('/auth/refresh')
-    apiClient.setHeader('Authorization', 'Bearer ' + data.data['accessToken'])
-    const res: any = await apiClient.get('/user/' + id)
-    console.log(res.data)
-    if(res.ok){
-        return {result: res.data, refreshToken: data.data.refreshToken}
-    }
-    return false
-        
-}
-*/
-
-const getUser = async (id: string, refreshToken: string) => {
-    if(MainRefreshToken.refreshToken != ""){
+  const getUser = async (id: string, refreshToken: string) => {
+    if(MainRefreshToken.refreshToken){
         console.log("using MainRefreshToken " + MainRefreshToken.refreshToken);
         refreshToken = MainRefreshToken.refreshToken;
     }
@@ -52,7 +30,7 @@ const getUser = async (id: string, refreshToken: string) => {
     const user = await apiClient.get('/user/' + id)
     console.log(user.data)
     if(user)
-        return { currentUser: user.data, refreshToken: data.data.refreshToken }
+        return { currentUser: user.data,refreshToken: MainRefreshToken.refreshToken}
     else{
         return false
     }
@@ -75,10 +53,6 @@ const updateUser = async (user: any, refreshToken: string) => {
         return false
 }
 
-
-
-
-
 const addStudent = async (student: any) => {
     return await apiClient.post('/user', student)
 }
@@ -92,6 +66,5 @@ export default {
     addStudent,
     uploadImage,
     getUser,
-    updateUser
-    //getUserById
+    updateUser,
 }
