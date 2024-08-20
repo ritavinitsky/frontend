@@ -6,7 +6,8 @@ export type Post = {
     creator_id: string,
     post_title: string,
     post_text: string,
-    //imgUrl: string,
+    imgUrl: string,
+    imgContent: string,
     id: string,
     user_name: string
 }
@@ -23,7 +24,8 @@ const getAllPosts = async (refreshToken: string) => {
                     creator_id: posts.Posts[index].creator_id,
                     post_title: posts.Posts[index].post_title,
                     post_text: posts.Posts[index].post_text,
-                    //imgUrl: posts.Posts[index].imgUrl,
+                    imgUrl: posts.Posts[index].imgUrl,
+                    imgContent: posts.Posts[index].imgContent,
                     id: posts.Posts[index]._id
                 }
                 const user = await UserApi.getUser(pst.creator_id, refreshToken);
@@ -51,7 +53,8 @@ const getUserPosts = async (creator_id: string, refreshToken: string) => {
                     creator_id: posts.Posts[index].creator_id,
                     post_title: posts.Posts[index].post_title,
                     post_text: posts.Posts[index].post_text,
-                    //imgUrl: posts.Posts[index].imgUrl,
+                    imgUrl: posts.Posts[index].imgUrl,
+                    imgContent: posts.Posts[index].imgContent,
                     id: posts.Posts[index]._id
                 }
                 const user = await UserApi.getUser(pst.creator_id, refreshToken);
@@ -71,7 +74,7 @@ const getPost = async(id: string, refreshToken: string) => {
         creator_id: '0',
         post_title: '0',
         post_text: '0',
-        //imgUrl: '0',
+        imgUrl: '0',
         id: '0'}
     try {
         const post: any = await PostApi.getSpecificPost(refreshToken, id)
@@ -81,7 +84,7 @@ const getPost = async(id: string, refreshToken: string) => {
                 creator_id: post.result.creator_id,
                 post_title: post.result.post_title,
                 post_text: post.result.post_text,
-                //imgUrl: post.result.imgUrl,
+                imgUrl: post.result.imgUrl,
                 id: post.result._id
             }
             console.log(pst)
@@ -96,7 +99,8 @@ const getPost = async(id: string, refreshToken: string) => {
 
 
 const addPost = async (post: Post, refreshToken: string) => {
-    console.log("addPost")
+    console.log("addPost");
+    console.log(post);
     const data = {creator_id: post.creator_id, post_title: post.post_title, imgUrl: post.imgUrl, post_text: post.post_text}
     try {
         const res = await PostApi.addPost(data, refreshToken) 
@@ -144,11 +148,13 @@ const updatePost = async(post: any, refreshToken: string, id: string) => {
     }
 }
 
-const uploadImage = async(imageURI: String) => {
+const uploadImage = async(imageURI: String, refreshToken: string) => {
         var body = new FormData();
-        body.append('file', {name: "name",type: 'image/jpeg',"uri": imageURI});
+        body.append('file', JSON.stringify({name: "name",type: 'image/jpeg', "uri": imageURI}));
         try{
-            const res = await UserApi.uploadImage(body)
+            console.log(body)
+            console.log("Post Model upload image")
+            const res = await PostApi.uploadImage(body, refreshToken);
             if(!res.ok){
                 console.log("save failed " + res.problem)
             }else{
@@ -160,9 +166,11 @@ const uploadImage = async(imageURI: String) => {
         }catch(err){
             console.log("save failed " + err)
         }
-        return ""
-        
-        
+        return ""     
 }
+
+
+
+
 
 export default {getAllPosts, getUserPosts, uploadImage, getPost, addPost, deletePost, updatePost}

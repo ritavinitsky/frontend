@@ -1,41 +1,49 @@
 import { useState, FC } from 'react';
 import { StyleSheet, View, TouchableOpacity, Alert, TextInput, StatusBar, Text } from 'react-native';
 import LoginRegistrationModel from '../Model/LoginModel';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const LoginPage: FC<{ navigation: any }> = ({ navigation }) => {
   const [email, onChangeEmail] = useState('');
   const [password, onChangePassword] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
 
   const onSave = async () => {
     try {
-        // Attempt login
-        const user = { email, password };
-        const result = await LoginRegistrationModel.login(user.email, user.password);
+      // Attempt login
+      const user = { email, password };
+      const result = await LoginRegistrationModel.login(user.email, user.password);
 
-        // Ensure result is correctly structured
-        if (result && result.accessToken && result.refreshToken) {
-            console.log("Login successful - AccessToken:", result.accessToken, "RefreshToken:", result.refreshToken);
-            navigation.navigate('DrawerNavigator', { 
-                accessToken: result.accessToken, 
-                refreshToken: result.refreshToken, 
-                user_id: result.user_id 
-            });
-        } else {
-            console.log("Login failed - Result:", result);
-            alert("Incorrect email or password")
-        }
+      // Ensure result is correctly structured
+      if (result && result.accessToken && result.refreshToken) {
+        console.log("Login successful - AccessToken:", result.accessToken, "RefreshToken:", result.refreshToken);
+        navigation.navigate('DrawerNavigator', {
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+          user_id: result.user_id
+        });
+      } else {
+        console.log("Login failed - Result:", result);
+        alert("Incorrect email or password");
+      }
     } catch (error) {
-        console.error("Error during login:", error);
-        Alert.alert("Login Error", "An error occurred during login");
+      console.error("Error during login:", error);
+      Alert.alert("Login Error", "An error occurred during login");
     }
   };
+
+  const handleForgotPassword = () => {
+    navigation.navigate('Forgot');
+
+  };
+
 
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.innerContainer}>
-        <Text style={styles.title}>כניסה</Text>
         <TextInput
           style={[styles.input, styles.inputRight]}
           onChangeText={onChangeEmail}
@@ -44,14 +52,25 @@ const LoginPage: FC<{ navigation: any }> = ({ navigation }) => {
           keyboardType="email-address"
           autoCapitalize="none"
         />
-        <TextInput
-          style={[styles.input, styles.inputRight]}
-          onChangeText={onChangePassword}
-          placeholder="סיסמה"
-          value={password}
-          secureTextEntry
-          autoCapitalize="none"
-        />
+
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={[styles.input, styles.inputRight, styles.passwordInput]}
+            onChangeText={onChangePassword}
+            placeholder="סיסמה"
+            value={password}
+            secureTextEntry={!passwordVisible}
+            autoCapitalize="none"
+          />
+          <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)} style={styles.eyeButton}>
+            <Icon name={passwordVisible ? 'eye-outline' : 'eye-off-outline'} size={24} color="#333" />
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPasswordContainer}>
+          <Text style={styles.forgotPasswordText}>שכחת סיסמה?</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.button} onPress={onSave}>
           <Text style={styles.buttonText}>כניסה</Text>
         </TouchableOpacity>
@@ -96,6 +115,24 @@ const styles = StyleSheet.create({
   },
   inputRight: {
     textAlign: 'right',
+  },
+  passwordContainer: {
+    position: 'relative', // Required for absolute positioning
+  },
+  passwordInput: {
+    paddingRight: 40, // Add padding to prevent text from overlapping with the icon
+  },
+  eyeButton: {
+    position: 'absolute',
+    right: 10, // Position the icon on the right side
+    top: '21%', // Center vertically
+  },
+  forgotPasswordContainer: {
+    marginVertical: 10, 
+  },
+  forgotPasswordText: {
+    color: '#007BFF',
+    fontSize: 14,
   },
   button: {
     backgroundColor: '#007BFF',

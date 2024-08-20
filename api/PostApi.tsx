@@ -23,8 +23,10 @@ const getUserPosts = async (creator_id: string, refreshToken: string) => {
         console.log("using MainRefreshToken " + MainRefreshToken.refreshToken);
         refreshToken = MainRefreshToken.refreshToken;
     }
+    console.log("refreshToken in getUserPosts: ", refreshToken);
     apiClient.setHeader('authorization', 'Bearer ' + refreshToken)
-    const data: any = await apiClient.get('/auth/refresh')
+    const data: any = await apiClient.get('/auth/refresh');
+    console.log("refreshToken in getUserPosts:", data.data.refreshToken);
     MainRefreshToken.refreshToken = data.data.refreshToken;
     apiClient.setHeader('authorization', 'Bearer ' + data.data['accessToken'])
     const res: any = await apiClient.get('/post', {creator_id: creator_id})
@@ -38,10 +40,10 @@ const addPost = async (post: any, refreshToken: string) => {
         console.log("using MainRefreshToken " + MainRefreshToken.refreshToken);
         refreshToken = MainRefreshToken.refreshToken;
     }
-    apiClient.setHeader('Authorization', 'Bearer ' + refreshToken)
+    apiClient.setHeader('authorization', 'Bearer ' + refreshToken)
     const data: any = await apiClient.get('/auth/refresh')
     MainRefreshToken.refreshToken = data.data.refreshToken;
-    apiClient.setHeader('Authorization', 'Bearer ' + data.data.accessToken)
+    apiClient.setHeader('authorization', 'Bearer ' + data.data.accessToken)
     const res: any = await apiClient.post('/post', post)
     if(res.ok){
         return {refreshToken: data.data.refreshToken}
@@ -54,10 +56,10 @@ const getSpecificPost = async(refreshToken: string, post_id: string) => {
         console.log("using MainRefreshToken " + MainRefreshToken.refreshToken);
         refreshToken = MainRefreshToken.refreshToken;
     }
-    apiClient.setHeader('Authorization', 'Bearer ' + refreshToken)
+    apiClient.setHeader('authorization', 'Bearer ' + refreshToken)
     const data: any = await apiClient.get('/auth/refresh')
     MainRefreshToken.refreshToken = data.data.refreshToken;
-    apiClient.setHeader('Authorization', 'Bearer ' + data.data['accessToken'])
+    apiClient.setHeader('authorization', 'Bearer ' + data.data['accessToken'])
     const res: any = await apiClient.get('/post/' + post_id)
     console.log(res.data)
     if(res.ok){
@@ -72,11 +74,11 @@ const deletePost = async(postID: string, refreshToken: string) => {
         console.log("using MainRefreshToken " + MainRefreshToken.refreshToken);
         refreshToken = MainRefreshToken.refreshToken;
     }
-    apiClient.setHeader('Authorization', 'Bearer ' + refreshToken)
+    apiClient.setHeader('authorization', 'Bearer ' + refreshToken)
     const data: any = await apiClient.get('/auth/refresh')
     MainRefreshToken.refreshToken = data.data.refreshToken;
-    console.log(data.data)
-    apiClient.setHeader('Authorization', 'Bearer ' + data.data.accessToken)
+    console.log(data.data);
+    apiClient.setHeader('authorization', 'Bearer ' + data.data.accessToken)
     const res: any = await apiClient.delete('/post/' + postID)
     if(res.ok){
         return {refreshToken: data.data.refreshToken}
@@ -88,11 +90,11 @@ const updatePost = async(post: any, refreshToken: string, postID: string) => {
         console.log("using MainRefreshToken " + MainRefreshToken.refreshToken);
         refreshToken = MainRefreshToken.refreshToken;
     }
-    apiClient.setHeader('Authorization', 'Bearer ' + refreshToken)
+    apiClient.setHeader('authorization', 'Bearer ' + refreshToken)
     const data: any = await apiClient.get('/auth/refresh')
     MainRefreshToken.refreshToken = data.data.refreshToken;
     console.log(data.data)
-    apiClient.setHeader('Authorization', 'Bearer ' + data.data.accessToken)
+    apiClient.setHeader('authorization', 'Bearer ' + data.data.accessToken)
     const res: any = await apiClient.put('/post/' + postID,  post)
     console.log("UPDATE ______" + res)
     if(res.ok){
@@ -100,7 +102,16 @@ const updatePost = async(post: any, refreshToken: string, postID: string) => {
     }
 }
 
-const uploadImage = async(image: any) => {
+const uploadImage = async(image: any, refreshToken: string) => {
+    if(MainRefreshToken.refreshToken != ""){
+        console.log("using MainRefreshToken " + MainRefreshToken.refreshToken);
+        refreshToken = MainRefreshToken.refreshToken;
+    }
+    apiClient.setHeader('authorization', 'Bearer ' + refreshToken)
+    const data: any = await apiClient.get('/auth/refresh')
+    MainRefreshToken.refreshToken = data.data.refreshToken;
+    console.log(data.data)
+    apiClient.setHeader('authorization', 'Bearer ' + data.data.accessToken)
     return await apiClient.post("/file/file", image, {headers:{"Content-Type": 'multipart/form-data'}})
 }
 

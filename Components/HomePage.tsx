@@ -1,146 +1,173 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import React, { useState, useEffect, useCallback, FC } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, Image, Dimensions, AppState } from 'react-native';
 import UserApi from '../api/UserApi';
+import axios from 'axios';
 
-const HomePage: FC<{ route: any, navigation: any }> = ({ navigation, route }) =>{
-  const [inputs, setInputs] = useState([{ food: '', cal: '' }]);
-  const [waterColors, setWaterColors] = useState(Array(8).fill('blue'));
-  const [remainingCalories, setRemainingCalories] = useState('200');
-  const [caloriesDepleted, setCaloriesDepleted] = useState(false); // Flag to track if calories have reached zero
+const HomePage: FC<{ route: any; navigation: any }> = ({ navigation, route }) => {
+  const [inputs, setInputs] = useState<{ food: string; cal: string }[]>([{ food: '', cal: '' }]);
+  const [waterColors, setWaterColors] = useState<string[]>(Array(8).fill('blue'));
+  const [remainingCalories, setRemainingCalories] = useState<number>(0);
+  const [initialCalories, setInitialCalories] = useState<number>(0);
+  const [isProfileFetched, setIsProfileFetched] = useState<boolean>(false);
 
+  const fullGlass = require('../assets/full.png');
+  const emptyGlass = require('../assets/empty.png');
+  const pencilIcon = require('../assets/pencil.png');
 
+  const { width } = Dimensions.get('window');
+
+  const fetchUserProfile = async () => {
+    try {
+      const { user_id, refreshToken } = route.params;
+      // Fetch the logged-in user's profile
+      const result = await UserApi.getUser(user_id, refreshToken);
+  
+      console.log('API Result:', result); // Log entire result object
+  
+      if (result && result.currentUser && result.currentUser.dailyCal) {
+        const dailyCalories = parseFloat(result.currentUser.dailyCal);
+        console.log('dailyCalories:', dailyCalories);
+        
+        if (isNaN(dailyCalories)) {
+          console.error('Invalid daily calories:', result.currentUser.dailyCal);
+          Alert.alert('Error', 'Invalid daily calories data');
+          return;
+        }
+  
+        setInitialCalories(dailyCalories);
+        setRemainingCalories(dailyCalories);
+        setIsProfileFetched(true);
+      } else {
+        Alert.alert('Error', 'Failed to load user profile or daily calories data is missing');
+      }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
+
+  const saveData = useCallback(async () => {
+    try {
+      const currentDate = new Date();
+      const isMidnight = currentDate.getHours() === 0 && currentDate.getMinutes() === 0;
+
+      if (isMidnight) {
+        if (remainingCalories === 0) {
+          await axios.post('http://backend-69iy.onrender.com/prograss', {
+            date: currentDate.toISOString(),
+            passed: "true",
+          });
+        } else {
+          await axios.post('http://backend-69iy.onrender.com/prograss', {
+            date: currentDate.toISOString(),
+            passed: "false",
+          });
+        }
+
+        // Reset states
+        setInputs([{ food: '', cal: '' }]);
+        setWaterColors(Array(8).fill('blue'));
+        setRemainingCalories(initialCalories);
+
+        Alert.alert('Progress Saved', 'Your progress has been saved.');
+      }
+    } catch (error) {
+      console.error('Error saving data:', error);
+    }
+  }, [inputs, remainingCalories, initialCalories, waterColors]);
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      const result = await UserApi.getUser(route.params.user_id, route.params.refreshToken);
-      console.log('Fetched User Data:', result); // Log the result
-      if (result) {
-        setRemainingCalories(result.currentUser.dailyCal);
-        
-      } else {
-        alert('שגיאה', 'נכשל בטעינת פרופיל המשתמש');
+    const handleAppStateChange = (nextAppState: string) => {
+      if (nextAppState === 'inactive' || nextAppState === 'background') {
+        saveData();
       }
     };
-    fetchUserProfile();
-    console.log("inside useEffect");
-    
-  }, []);
 
-  
-  // console.log("remainingCalories:",remainingCalories);
-
-
-  // Reset time at 12 AM (midnight)
-  const resetHour = 0; // 0 is 12 AM (midnight)
+    const appStateSubscription = AppState.addEventListener('change', handleAppStateChange);
+    return () => {
+      saveData(); // Ensure data is saved when component unmounts
+      appStateSubscription.remove();
+    };
+  }, [saveData]);
 
   useEffect(() => {
-    const now = new Date();
-    const timeUntilReset = getNextResetTime(now);
-
-    const timer = setTimeout(() => {
-      resetState();
-    }, timeUntilReset);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const getNextResetTime = (currentDate) => {
-    const resetTime = new Date(currentDate);
-    resetTime.setHours(resetHour, 0, 0, 0); // Set to 12 AM (midnight)
-
-    if (resetTime <= currentDate) {
-      resetTime.setDate(resetTime.getDate() + 1); // Move to next day if it's already past reset time today
+    if (!isProfileFetched) {
+      fetchUserProfile();
     }
-
-    return resetTime - currentDate; // Return time difference in milliseconds
-  };
-
-  const resetState = () => {
-    console.log('State Reset at:', new Date()); // Log the date and time of the reset
-    setInputs([{ food: '', cal: '' }]);
-    setWaterColors(Array(8).fill('blue'));
-    setRemainingCalories(initialCalories);
-    setCaloriesDepleted(false); // Reset the flag for the next day
-  };
+  }, [isProfileFetched]);
 
   const addInputFields = () => {
     setInputs([...inputs, { food: '', cal: '' }]);
   };
 
-  const handleChange = (index, field, value) => {
+  const handleChange = (index: number, field: 'food' | 'cal', value: string) => {
     const newInputs = [...inputs];
     newInputs[index][field] = value;
     setInputs(newInputs);
     updateRemainingCalories(newInputs);
   };
 
-  const updateRemainingCalories = (newInputs) => {
-    let totalCal = initialCalories;
-    newInputs.forEach((input) => {
-      if (input.cal && !isNaN(input.cal)) {
-        totalCal -= parseInt(input.cal);
-      }
-    });
-
-    // Ensure remainingCalories does not go below 0
-    if (totalCal < 0) {
-      totalCal = 0;
-    }
-
-    setRemainingCalories(totalCal);
-
-    // Check if remaining calories have reached zero
-    if (totalCal === 0 && !caloriesDepleted) {
-      setCaloriesDepleted(true);
-      console.log('Calories depleted for today:', new Date()); // Log when calories are depleted for the day
-      // You can perform additional actions here, such as saving to storage or triggering notifications
-    }
+  const updateRemainingCalories = (newInputs: { food: string; cal: string }[]) => {
+    const totalConsumedCalories = newInputs.reduce((total, input) => {
+      const calValue = parseFloat(input.cal) || 0;
+      return total + calValue;
+    }, 0);
+    setRemainingCalories(initialCalories - totalConsumedCalories);
   };
 
-  const toggleWaterColor = (index) => {
+  const toggleWaterColor = (index: number) => {
     const newColors = [...waterColors];
     newColors[index] = newColors[index] === 'blue' ? 'gray' : 'blue';
     setWaterColors(newColors);
   };
 
-
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>{remainingCalories}</Text>
-      
+      <Text style={[styles.header, { fontSize: width * 0.27 }]}>
+        {isProfileFetched ? Math.floor(remainingCalories) : ' '}
+      </Text>
+
       {inputs.map((input, index) => (
         <View key={index} style={styles.inputContainer}>
-          <TextInput 
-            style={styles.input} 
-            placeholder="Food" 
-            value={input.food} 
-            onChangeText={(value) => handleChange(index, 'food', value)} 
+          <TextInput
+            style={input.food ? [styles.inputWithText, { width: width * 0.4 }] : [styles.input, { width: width * 0.4 }]}
+            placeholder="אוכל"
+            value={input.food}
+            onChangeText={(value) => handleChange(index, 'food', value)}
+            textAlign="right"
+            textAlignVertical="center"
+            placeholderTextColor="gray"
           />
-          <TextInput 
-            style={styles.input} 
-            placeholder="Calories" 
-            value={input.cal} 
-            keyboardType="numeric" 
-            onChangeText={(value) => handleChange(index, 'cal', value)} 
+          <TextInput
+            style={input.cal ? [styles.inputWithText, { width: width * 0.4 }] : [styles.input, { width: width * 0.4 }]}
+            placeholder="קלוריות"
+            value={input.cal}
+            keyboardType="numeric"
+            onChangeText={(value) => handleChange(index, 'cal', value)}
+            textAlign="right"
+            textAlignVertical="center"
+            placeholderTextColor="gray"
           />
         </View>
       ))}
-      
-      <Button title="+" onPress={addInputFields} />
 
-      <View style={styles.waterContainer}>
+      <TouchableOpacity style={styles.plusButton} onPress={addInputFields}>
+        <Image source={pencilIcon} style={[styles.pencilIcon, { width: width * 0.1, height: width * 0.15 }]} />
+      </TouchableOpacity>
+
+      <View style={[styles.waterContainer, { width: '100%' }]}>
         {waterColors.map((color, index) => (
           <TouchableOpacity key={index} onPress={() => toggleWaterColor(index)}>
-            <MaterialIcons name="local-drink" size={24} color={color} style={{ marginRight: 10 }} />
+            <Image
+              source={color === 'blue' ? fullGlass : emptyGlass}
+              style={[styles.waterImage, { width: width * 0.12, height: width * 0.12 }]}
+              resizeMode="contain"
+            />
           </TouchableOpacity>
         ))}
       </View>
-
     </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -148,28 +175,60 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    height: '100%',
+    backgroundColor: 'white',
   },
   header: {
-    fontSize: 48,
     fontWeight: 'bold',
     marginBottom: 20,
   },
   inputContainer: {
     flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
+    width: '90%',
   },
   input: {
     borderWidth: 1,
     borderColor: 'gray',
-    marginRight: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontWeight: 'bold',
+    marginHorizontal: '2.5%',
+    height: 40,
+  },
+  inputWithText: {
+    borderWidth: 0,
+    paddingVertical: 10,
+    paddingHorizontal: 65,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    alignItems: 'center',
+    fontWeight: 'bold',
+    marginHorizontal: '2.5%',
+    height: 40,
+  },
+  plusButton: {
     padding: 10,
-    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 20,
+    backgroundColor: 'white',
+  },
+  pencilIcon: {
+    resizeMode: 'contain',
   },
   waterContainer: {
     flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20,
+  },
+  waterImage: {
+    marginHorizontal: '0%',
   },
 });
 

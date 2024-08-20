@@ -13,7 +13,7 @@ const UsersPostListPage: FC<{route:any, navigation: any, }> = ({navigation, rout
     const onItemDeleted = async (id: string) => {
         console.log('Item deleted: ' + id);
         const res: any = await PostModel.deletePost(id, route.params.refreshToken);
-        const posts: any = await PostModel.getUserPosts(route.params.user_id, route.params.refreshToken);
+        const posts: any = await PostModel.getUserPosts(route.params.user_id, res.refreshToken);
 
         console.log(posts)
         setData(posts.Posts)
@@ -51,7 +51,7 @@ const UsersPostListPage: FC<{route:any, navigation: any, }> = ({navigation, rout
             data = {data}
             keyExtractor={(item) => item.id}
             renderItem={({item}) => (
-                <PostListRawEditable user_name={item.user_name} post_title={item.post_title} post_text={item.post_text} imgURL={item.imgUrl} id={item.id} onItemSelected={onItemSelected} onItemDeleted={onItemDeleted} onItemChanged={onItemChanged}/>
+                <PostListRawEditable user_name={item.user_name} post_title={item.post_title} post_text={item.post_text} imgURL={item.imgUrl} imgContent={item.imgContent} id={item.id} onItemSelected={onItemSelected} onItemDeleted={onItemDeleted} onItemChanged={onItemChanged}/>
             )}
         />
     )

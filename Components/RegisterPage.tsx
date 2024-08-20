@@ -1,11 +1,16 @@
 import { useState, FC } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Alert, TextInput, StatusBar } from 'react-native';
 
-const StudentAddPage: FC<{ navigation: any }> = ({ navigation }) => {
+const RegisterPage: FC<{ navigation: any }> = ({ navigation }) => {
   const [name, onChangeName] = useState('');
   const [age, onChangeAge] = useState('');
   const [password, onChangePassword] = useState('');
   const [email, onChangeEmail] = useState('');
+  const [termsAccepted, setTermsAccepted] = useState(false); // New state for terms acceptance
+
+  const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+  const nameRegex = /^[a-zA-Z0-9]{3,12}$/;
+  const passwordRegex = /^.{6,}$/; 
 
   const onSave = async () => {
     const user = {
@@ -26,6 +31,21 @@ const StudentAddPage: FC<{ navigation: any }> = ({ navigation }) => {
         // Log the response status and content
         console.log("Response Status:", response.status);
 
+        if (!emailRegex.test(email)) {
+          Alert.alert('Invalid email address');
+          return;
+        }
+
+        if (!nameRegex.test(name)) {
+          Alert.alert('Invalid name needs to be between 3-12 letters with numbers');
+          return;
+        }
+
+        if (!passwordRegex.test(password)) {
+          Alert.alert('Invalid password', 'Password needs to be at least 6 characters long.');
+          return;
+        }
+        
         let result;
         const contentType = response.headers.get('Content-Type');
 
@@ -47,9 +67,9 @@ const StudentAddPage: FC<{ navigation: any }> = ({ navigation }) => {
             // Registration successful
             alert("Registered successfully");
             navigation.navigate('Program', { 
+              user_id: result.user_id,
               accessToken: result.accessToken, 
               refreshToken: result.refreshToken, 
-              user_id: result.user_id 
              });
         } else if (response.status === 409) {
             Alert.alert("Registration Error", result.message || "Email already exists");
@@ -63,7 +83,13 @@ const StudentAddPage: FC<{ navigation: any }> = ({ navigation }) => {
     }
 };
 
-  
+const toggleTermsAcceptance = () => {
+  setTermsAccepted(!termsAccepted);
+};
+
+const navigateToTerms = () => {
+  navigation.navigate('About'); // Assuming you have a Terms screen
+};
   
 
   return (
@@ -100,6 +126,18 @@ const StudentAddPage: FC<{ navigation: any }> = ({ navigation }) => {
           secureTextEntry
           autoCapitalize="none"
         />
+
+        <View style={styles.termsContainer}>
+          <TouchableOpacity onPress={toggleTermsAcceptance} style={styles.checkbox}>
+            {termsAccepted ? <Text style={styles.checkboxText}>☑</Text> : <Text style={styles.checkboxText}>☐</Text>}
+          </TouchableOpacity>
+          <Text style={styles.termsText}>
+            אני מסכים ל
+            <Text style={styles.termsLink} onPress={navigateToTerms}> תנאים והגבלות</Text>
+          </Text>
+        </View>
+
+
         <TouchableOpacity style={styles.button} onPress={onSave}>
           <Text style={styles.buttonText}>הרשמה</Text>
         </TouchableOpacity>
@@ -150,6 +188,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  termsContainer: {
+    flexDirection: 'row-reverse',
+    marginVertical: 10,
+  },
+  checkbox: {
+    marginLeft: 10,
+  },
+  checkboxText: {
+    fontSize: 16,
+  },
+  termsText: {
+    fontSize: 14,
+    align:'right',
+  },
+  termsLink: {
+    color: '#007BFF',
+    textDecorationLine: 'underline',
+  },
 });
 
-export default StudentAddPage;
+export default RegisterPage;

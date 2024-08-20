@@ -11,9 +11,9 @@ export interface User {
 const getUserById = async (userId: string, refreshToken: string): Promise<{ currentUser: User } | null> => {
   try {
     console.log("trying get user")
-    const response = await apiClient.get(`/user/${userId}`, {
+    const response = await apiClient.get(/user/${userId}, {
       headers: {
-        'Authorization': `Bearer ${refreshToken}`
+        'authorization': Bearer ${refreshToken}
       }
     });
 

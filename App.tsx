@@ -5,7 +5,6 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { FC, useEffect } from 'react';
 import LoginPage from './Components/LoginPage';
 import RegisterPage from './Components/RegisterPage';
-import HomePage from './Components/HomePage';
 import PostAddPage from './Components/PostAddPage';
 import PostListPage from './Components/PostListPage';
 import UserProfilePage from './Components/UserProfilePage';
@@ -17,7 +16,7 @@ import Timers from './Components/TimersPage';
 import Terms from './Components/TermsPage';
 import Calculators from './Components/CalculatorsPage';
 import Program from './Components/BuildingProgramPage';
-import Proccess from './Components/Proccess';
+import HomePage from './Components/HomePage';
 
 const testConnection = async () => {
   try {
@@ -55,7 +54,7 @@ const MainScreen: FC<{ navigation: any }> = ({ navigation }) => {
 };
 
 const DrawerNavigator: FC<{ route: any, navigation: any }> = ({ navigation, route }) => (
-  <Drawer.Navigator initialRouteName="PostListPage">
+  <Drawer.Navigator initialRouteName="Home">
     <Drawer.Screen
       name="Home"
       component={HomePage}
@@ -70,7 +69,7 @@ const DrawerNavigator: FC<{ route: any, navigation: any }> = ({ navigation, rout
     />
     <Drawer.Screen
       name="Proccess"
-      component={Proccess}
+      component={ComingSoon}
       options={{ title: 'תהליך' }}
       initialParams={route.params}
     />
@@ -154,6 +153,7 @@ const App = () => {
           component={PostAddPage}
           options={{ title: 'הוספת פוסט' }}
         />
+      
          <Stack.Screen
           name="Program"
           component={Program}
