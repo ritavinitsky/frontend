@@ -26,7 +26,7 @@ const PostListPage: FC<{ route: any, navigation: any }> = ({ navigation, route }
                 headerTitle: "Posts",
                 headerRight: () => (
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('PostAddPic', { refreshToken: route.params.refreshToken, userID: route.params.userID })}
+                        onPress={() => navigation.navigate('PostAddPage', { refreshToken: route.params.refreshToken, userID: route.params.userID })}
                         style={styles.plusButtonContainer}
                     >
                         <Text style={styles.plusButton}>+</Text>

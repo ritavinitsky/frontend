@@ -100,21 +100,21 @@ const navigateToTerms = () => {
           style={[styles.input, styles.inputRight]}
           onChangeText={onChangeName}
           value={name}
-          placeholder='הכנס שם'
+          placeholder='שם'
           autoCapitalize="words"
         />
         <TextInput
           style={[styles.input, styles.inputRight]}
           onChangeText={onChangeAge}
           value={age}
-          placeholder='הכנס גיל'
+          placeholder='גיל'
           keyboardType="numeric"
         />
         <TextInput
           style={[styles.input, styles.inputRight]}
           onChangeText={onChangeEmail}
           value={email}
-          placeholder='הכנס כתובת אימייל'
+          placeholder='מייל'
           keyboardType="email-address"
           autoCapitalize="none"
         />
@@ -122,7 +122,7 @@ const navigateToTerms = () => {
           style={[styles.input, styles.inputRight]}
           onChangeText={onChangePassword}
           value={password}
-          placeholder='הכנס סיסמה'
+          placeholder='סיסמא'
           secureTextEntry
           autoCapitalize="none"
         />
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   button: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#000000',
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: 'center',
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     align:'right',
   },
   termsLink: {
-    color: '#007BFF',
+    color: '#ff0000',
     textDecorationLine: 'underline',
   },
 });

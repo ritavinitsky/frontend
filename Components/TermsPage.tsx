@@ -5,9 +5,9 @@ const Terms: FC<{ route: any, navigation: any }> = ({ navigation, route }) => {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-          <Text style={styles.heading}>תקנון אפליקציה לבניית תוכנית לירידה במשקל</Text>
+          <Text style={styles.heading}>תקנון</Text>
           
-          <Text style={styles.sectionTitle}>ברוכים הבאים לאפליקציית בניית תוכנית לירידה במשקל ("האפליקציה")!</Text>
+          <Text style={styles.sectionTitle}>ברוכים הבאים לאפליקציית בניית תוכנית לירידה במשקל Eat & Fit!</Text>
           <Text style={styles.text}>לפני השימוש באפליקציה, אנא קראו בעיון את תנאי השימוש הבאים. השימוש באפליקציה מעיד על הסכמתכם לתנאים אלו.</Text>
           
           <Text style={styles.sectionTitle}>1. הסכמה לתנאים</Text>
@@ -35,11 +35,11 @@ const Terms: FC<{ route: any, navigation: any }> = ({ navigation, route }) => {
           <Text style={styles.text}>כל הזכויות באפליקציה, לרבות התכנים, העיצוב, הלוגו והקוד, שמורות לנו. אין להעתיק, להפיץ, לשדר או לשכפל כל חלק מהאפליקציה ללא אישור מראש ובכתב.</Text>
           
           <Text style={styles.sectionTitle}>9. צור קשר</Text>
-          <Text style={styles.text}>אם יש לכם שאלות בנוגע לתנאי השימוש או בנוגע לאפליקציה, אתם מוזמנים לפנות אלינו בכתובת הדוא"ל: [example@example.com].</Text>
+          <Text style={styles.text}>אם יש לכם שאלות בנוגע לתנאי השימוש או בנוגע לאפליקציה, אתם מוזמנים לפנות אלינו בכתובת הדוא"ל: eat.an.fit@gmail.com.</Text>
           
           <Text style={styles.sectionTitle}>תודה שבחרתם להשתמש באפליקציית בניית תוכנית לירידה במשקל שלנו. אנו מאחלים לכם הצלחה רבה בדרככם לבריאות טובה ואורח חיים בריא!</Text>
           
-          <Text style={styles.text}>תאריך עדכון אחרון: [תאריך]</Text>
+          <Text style={styles.text}>תאריך עדכון אחרון:24-08-2024</Text>
         </ScrollView>
       );
 }

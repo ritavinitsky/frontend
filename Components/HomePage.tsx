@@ -47,6 +47,31 @@ const HomePage: FC<{ route: any; navigation: any }> = ({ navigation, route }) =>
           setRemaningCalories(result.currentUser.remaningCal);
           console.log('remaningCalories:else', remaningCalories);
         }
+
+        // Fetch today's inputs
+        const today = new Date().toISOString().split('T')[0];
+        console.log('Today:', today);
+        
+        const inputRecords = result.currentUser.inputRecords;
+        console.log('Input Records:', inputRecords);
+  
+        const todayInputs = inputRecords.filter((record: any) => 
+          new Date(record.date).toISOString().split('T')[0] === today
+        );
+  
+        console.log('Today\'s Inputs:', todayInputs);
+
+           // Ensure there's at least one empty input field
+      const updatedInputs = todayInputs.length > 0 
+      ? todayInputs.map((input: any) => ({
+          food: input.food,
+          cal: input.cal.toString(),
+        }))
+      : [{ food: '', cal: '' }];
+    
+    setInputs(updatedInputs);
+    console.log('inputs:', updatedInputs);
+
       } else {
         Alert.alert('Error', 'Failed to load user profile or daily calories data is missing');
       }
@@ -65,11 +90,19 @@ const HomePage: FC<{ route: any; navigation: any }> = ({ navigation, route }) =>
           await axios.post('http://backend-69iy.onrender.com/prograss', {
             date: currentDate.toISOString(),
             passed: "true",
+            userId: userId,
           });
         } else {
+          await axios.post('https://backend-69iy.onrender.com/user/updateRemaningCalories', {
+            userId,
+            remaningCalories: 0,
+            inputs: inputs,
+          });
+
           await axios.post('http://backend-69iy.onrender.com/prograss', {
             date: currentDate.toISOString(),
             passed: "false",
+            userId: userId,
           });
         }
 
@@ -105,41 +138,44 @@ const HomePage: FC<{ route: any; navigation: any }> = ({ navigation, route }) =>
     }
   }, [isProfileFetched]);
 
-
   const addInputFields = async () => {
     try {
-      // Calculate total consumed calories
-      const totalConsumedCalories = inputs.reduce((total, input) => {
-        const calValue = parseFloat(input.cal) || 0;
-        return total + calValue;
-      }, 0);
-      
-      let newRemainingCalories;
-      if(remaningCalories === 0 || isNaN(remaningCalories)) {
-      // Calculate remaining calories
-       newRemainingCalories = initialCalories - totalConsumedCalories;
-      setRemaningCalories(newRemainingCalories);
-      }else{
-         newRemainingCalories = remaningCalories - totalConsumedCalories;
-        setRemaningCalories(newRemainingCalories);
-      }
-      // Update remaining calories in the database
-      if (userId) {
-        await axios.post('https://backend-69iy.onrender.com/user/updateRemaningCalories', {
-          userId,
-          remaningCalories: newRemainingCalories,
-          inputs: inputs,
-        });
-      }
+   // Get the calorie value of the last input
+   const lastInputIndex = inputs.length - 1;
+   const lastInput = inputs[lastInputIndex];
+   const lastInputCal = parseFloat(lastInput.cal) || 0;
   
-      setRemaningCalories(newRemainingCalories);
+      // Calculate new remaining calories based on the last input
+      const newRemainingCalories = remaningCalories - lastInputCal;
+  
+        // Prepare the most recent input record for sending to the backend
+        const recentInput = {
+          food: lastInput.food.trim() || 'Unknown',
+          cal: lastInputCal,
+      };
 
+  
+      // Update the remaining calories
+      setRemaningCalories(newRemainingCalories);
+  
+      // Update remaining calories and send new input to the database
+      if (userId) {
+              await axios.post('https://backend-69iy.onrender.com/user/updateRemaningCalories', {
+                userId,
+                remaningCalories: newRemainingCalories,
+                input: recentInput,
+              });
+            }
+  
       // Add new input field
       setInputs([...inputs, { food: '', cal: '' }]);
     } catch (error) {
-      console.error('Error updating remaining calories:', error);
+      console.error('Error updating remaining calories:', error.response ? error.response.data : error.message);
     }
   };
+  
+  
+  
   
 
   const handleChange = (index: number, field: 'food' | 'cal', value: string) => {

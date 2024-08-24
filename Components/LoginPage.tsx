@@ -47,7 +47,7 @@ const LoginPage: FC<{ navigation: any }> = ({ navigation }) => {
         <TextInput
           style={[styles.input, styles.inputRight]}
           onChangeText={onChangeEmail}
-          placeholder="אימייל"
+          placeholder="מייל"
           value={email}
           keyboardType="email-address"
           autoCapitalize="none"
@@ -57,7 +57,7 @@ const LoginPage: FC<{ navigation: any }> = ({ navigation }) => {
           <TextInput
             style={[styles.input, styles.inputRight, styles.passwordInput]}
             onChangeText={onChangePassword}
-            placeholder="סיסמה"
+            placeholder="סיסמא"
             value={password}
             secureTextEntry={!passwordVisible}
             autoCapitalize="none"
@@ -131,11 +131,11 @@ const styles = StyleSheet.create({
     marginVertical: 10, 
   },
   forgotPasswordText: {
-    color: '#007BFF',
+    color: '#ff0000',
     fontSize: 14,
   },
   button: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#000000',
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: 'center',

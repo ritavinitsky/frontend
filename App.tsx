@@ -1,8 +1,8 @@
-import { StyleSheet, View, StatusBar, Button, ScrollView, SafeAreaView, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, StatusBar, Button, ScrollView, SafeAreaView, Text, TouchableOpacity,Animated ,Image} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { FC, useEffect } from 'react';
+import { FC, useEffect,imageOpacity ,useRef} from 'react';
 import LoginPage from './Components/LoginPage';
 import RegisterPage from './Components/RegisterPage';
 import PostAddPage from './Components/PostAddPage';
@@ -17,6 +17,7 @@ import Terms from './Components/TermsPage';
 import Calculators from './Components/CalculatorsPage';
 import Program from './Components/BuildingProgramPage';
 import Forgot from './Components/Forgot';
+import Proccess from './Components/Proccess';
 import HomePage from './Components/HomePage';
 
 const testConnection = async () => {
@@ -38,20 +39,42 @@ const Drawer = createDrawerNavigator();
 const MainRefreshToken = { refreshToken: "" };
 
 const MainScreen: FC<{ navigation: any }> = ({ navigation }) => {
-  return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('LoginPage')}>
-            <Text style={styles.buttonText}>התחברות</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('RegisterPage')}>
-            <Text style={styles.buttonText}>הרשמה</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+
+  const imageOpacity = useRef(new Animated.Value(0)).current;
+  const buttonOpacity = useRef(new Animated.Value(0)).current; 
+
+  useEffect(() => {
+    Animated.sequence([
+      Animated.timing(imageOpacity, {
+        toValue: 1,
+        duration: 1250, // Image fades in over 1 second
+        useNativeDriver: true,
+      }),
+      Animated.timing(buttonOpacity, {
+        toValue: 1,
+        duration: 1250, // Buttons fade in over 1 second after the image
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+return (
+  <SafeAreaView style={styles.safeArea}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <Animated.View style={{ opacity: imageOpacity }}>
+        <Image source={require('./assets/logo.jpg')} style={styles.logo} />
+      </Animated.View>
+      <Animated.View style={[styles.buttonContainer, { opacity: buttonOpacity }]}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('LoginPage')}>
+          <Text style={styles.buttonText}>התחברות</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('RegisterPage')}>
+          <Text style={styles.buttonText}>הרשמה</Text>
+        </TouchableOpacity>
+      </Animated.View>
+    </ScrollView>
+  </SafeAreaView>
+);
 };
 
 const DrawerNavigator: FC<{ route: any, navigation: any }> = ({ navigation, route }) => (
@@ -70,7 +93,7 @@ const DrawerNavigator: FC<{ route: any, navigation: any }> = ({ navigation, rout
     />
     <Drawer.Screen
       name="Proccess"
-      component={ComingSoon}
+      component={Proccess}
       options={{ title: 'תהליך' }}
       initialParams={route.params}
     />
@@ -181,7 +204,7 @@ const App = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#ffffff',
   },
   scrollContainer: {
     flexGrow: 1,
@@ -189,12 +212,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
   },
+  logo: {
+    width: 300,
+    height: 300,
+    marginBottom: 20,
+  },
   buttonContainer: {
     width: '100%',
     alignItems: 'center',
   },
   button: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#000000',
     paddingVertical: 15,
     paddingHorizontal: 25,
     borderRadius: 8,
