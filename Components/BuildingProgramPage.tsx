@@ -17,6 +17,7 @@ const Program: FC<{ route: any, navigation: any }> = ({ navigation, route }) => 
   const [user_name, onChangeName] = useState('');
   const [user_age, onChangeAge] = useState('');
   const [user_email, onChangeEmail] = useState('');
+  const [remaningCal, setRemaningCal] = useState('');
 
   const [maleImage, setMaleImage] = useState(require('../assets/bluemale.jpg'));
   const [femaleImage, setFemaleImage] = useState(require('../assets/pinkfemale.jpg'));
@@ -80,6 +81,7 @@ const Program: FC<{ route: any, navigation: any }> = ({ navigation, route }) => 
         onChangeName(result.currentUser.name);
         onChangeEmail(result.currentUser.email);
         onChangeAge(result.currentUser.age);
+        setRemaningCal(result.currentUser.remaningCal);
       } else {
         Alert.alert('שגיאה', 'נכשל בטעינת פרופיל המשתמש');
       }
@@ -127,7 +129,7 @@ const Program: FC<{ route: any, navigation: any }> = ({ navigation, route }) => 
   }
   
     const result = await UserApi.updateUser(
-      { id: route.params.user_id, email: user_email, name: user_name, age: user_age, dailyCal: res },
+      { id: route.params.user_id, email: user_email, name: user_name, age: user_age, dailyCal: res , remaningCal},
       route.params.refreshToken
     );
   

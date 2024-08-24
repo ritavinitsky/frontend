@@ -16,6 +16,7 @@ import Timers from './Components/TimersPage';
 import Terms from './Components/TermsPage';
 import Calculators from './Components/CalculatorsPage';
 import Program from './Components/BuildingProgramPage';
+import Forgot from './Components/Forgot';
 import HomePage from './Components/HomePage';
 
 const testConnection = async () => {
@@ -117,6 +118,13 @@ const DrawerNavigator: FC<{ route: any, navigation: any }> = ({ navigation, rout
       options={{ title: 'תקנון' }}
       initialParams={route.params}
     />
+
+<Drawer.Screen
+      name="forgot"
+      component={Forgot}
+      options={{ title: 'שכחתי סיסמה' }}
+      initialParams={route.params}
+    />
   </Drawer.Navigator>
 );
 
@@ -159,6 +167,12 @@ const App = () => {
           component={Program}
           options={{ title: 'יצירת תכנית' }}
         />
+
+<Stack.Screen
+      name="forgot"
+      component={Forgot}
+      options={{ title: 'שכחתי סיסמה' }}
+    />
       </Stack.Navigator>
     </NavigationContainer>
   );

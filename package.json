@@ -29,7 +29,7 @@
     "expo": "~51.0.28",
     "expo-image-picker": "~15.0.5",
     "expo-status-bar": "~1.12.1",
-    "expo-updates": "^0.25.22",
+    "expo-updates": "^0.25.23",
     "form-data": "^4.0.0",
     "install": "^0.13.0",
     "npm": "^10.8.2",

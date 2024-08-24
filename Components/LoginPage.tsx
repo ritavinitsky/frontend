@@ -34,7 +34,7 @@ const LoginPage: FC<{ navigation: any }> = ({ navigation }) => {
   };
 
   const handleForgotPassword = () => {
-    navigation.navigate('Forgot');
+    navigation.navigate('forgot');
 
   };
 

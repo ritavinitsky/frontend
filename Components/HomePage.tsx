@@ -6,9 +6,10 @@ import axios from 'axios';
 const HomePage: FC<{ route: any; navigation: any }> = ({ navigation, route }) => {
   const [inputs, setInputs] = useState<{ food: string; cal: string }[]>([{ food: '', cal: '' }]);
   const [waterColors, setWaterColors] = useState<string[]>(Array(8).fill('blue'));
-  const [remainingCalories, setRemainingCalories] = useState<number>(0);
+  const [remaningCalories, setRemaningCalories] = useState<number>(0);
   const [initialCalories, setInitialCalories] = useState<number>(0);
   const [isProfileFetched, setIsProfileFetched] = useState<boolean>(false);
+  const [userId, setUserId] = useState<string | null>(null); // Added userId state
 
   const fullGlass = require('../assets/full.png');
   const emptyGlass = require('../assets/empty.png');
@@ -19,24 +20,33 @@ const HomePage: FC<{ route: any; navigation: any }> = ({ navigation, route }) =>
   const fetchUserProfile = async () => {
     try {
       const { user_id, refreshToken } = route.params;
+      setUserId(user_id); // Set the user ID
+
       // Fetch the logged-in user's profile
       const result = await UserApi.getUser(user_id, refreshToken);
-  
+
       console.log('API Result:', result); // Log entire result object
-  
+
       if (result && result.currentUser && result.currentUser.dailyCal) {
         const dailyCalories = parseFloat(result.currentUser.dailyCal);
         console.log('dailyCalories:', dailyCalories);
-        
+        console.log('RemaningCalories:', result.currentUser.remaningCal);
+
         if (isNaN(dailyCalories)) {
           console.error('Invalid daily calories:', result.currentUser.dailyCal);
           Alert.alert('Error', 'Invalid daily calories data');
           return;
         }
-  
+
         setInitialCalories(dailyCalories);
-        setRemainingCalories(dailyCalories);
         setIsProfileFetched(true);
+        if(parseFloat(result.currentUser.remaningCal) === 0 || isNaN(result.currentUser.remaningCal)) {
+          setRemaningCalories(dailyCalories);
+          console.log('remaningCalories:if', remaningCalories);
+        } else {
+          setRemaningCalories(result.currentUser.remaningCal);
+          console.log('remaningCalories:else', remaningCalories);
+        }
       } else {
         Alert.alert('Error', 'Failed to load user profile or daily calories data is missing');
       }
@@ -51,7 +61,7 @@ const HomePage: FC<{ route: any; navigation: any }> = ({ navigation, route }) =>
       const isMidnight = currentDate.getHours() === 0 && currentDate.getMinutes() === 0;
 
       if (isMidnight) {
-        if (remainingCalories === 0) {
+        if (remaningCalories === 0) {
           await axios.post('http://backend-69iy.onrender.com/prograss', {
             date: currentDate.toISOString(),
             passed: "true",
@@ -66,14 +76,14 @@ const HomePage: FC<{ route: any; navigation: any }> = ({ navigation, route }) =>
         // Reset states
         setInputs([{ food: '', cal: '' }]);
         setWaterColors(Array(8).fill('blue'));
-        setRemainingCalories(initialCalories);
+        setRemaningCalories(initialCalories);
 
         Alert.alert('Progress Saved', 'Your progress has been saved.');
       }
     } catch (error) {
       console.error('Error saving data:', error);
     }
-  }, [inputs, remainingCalories, initialCalories, waterColors]);
+  }, [inputs, remaningCalories, initialCalories, waterColors, userId]);
 
   useEffect(() => {
     const handleAppStateChange = (nextAppState: string) => {
@@ -95,24 +105,50 @@ const HomePage: FC<{ route: any; navigation: any }> = ({ navigation, route }) =>
     }
   }, [isProfileFetched]);
 
-  const addInputFields = () => {
-    setInputs([...inputs, { food: '', cal: '' }]);
+
+  const addInputFields = async () => {
+    try {
+      // Calculate total consumed calories
+      const totalConsumedCalories = inputs.reduce((total, input) => {
+        const calValue = parseFloat(input.cal) || 0;
+        return total + calValue;
+      }, 0);
+      
+      let newRemainingCalories;
+      if(remaningCalories === 0 || isNaN(remaningCalories)) {
+      // Calculate remaining calories
+       newRemainingCalories = initialCalories - totalConsumedCalories;
+      setRemaningCalories(newRemainingCalories);
+      }else{
+         newRemainingCalories = remaningCalories - totalConsumedCalories;
+        setRemaningCalories(newRemainingCalories);
+      }
+      // Update remaining calories in the database
+      if (userId) {
+        await axios.post('https://backend-69iy.onrender.com/user/updateRemaningCalories', {
+          userId,
+          remaningCalories: newRemainingCalories,
+          inputs: inputs,
+        });
+      }
+  
+      setRemaningCalories(newRemainingCalories);
+
+      // Add new input field
+      setInputs([...inputs, { food: '', cal: '' }]);
+    } catch (error) {
+      console.error('Error updating remaining calories:', error);
+    }
   };
+  
 
   const handleChange = (index: number, field: 'food' | 'cal', value: string) => {
     const newInputs = [...inputs];
     newInputs[index][field] = value;
     setInputs(newInputs);
-    updateRemainingCalories(newInputs);
+    console.log('newinputs', newInputs);
   };
 
-  const updateRemainingCalories = (newInputs: { food: string; cal: string }[]) => {
-    const totalConsumedCalories = newInputs.reduce((total, input) => {
-      const calValue = parseFloat(input.cal) || 0;
-      return total + calValue;
-    }, 0);
-    setRemainingCalories(initialCalories - totalConsumedCalories);
-  };
 
   const toggleWaterColor = (index: number) => {
     const newColors = [...waterColors];
@@ -123,7 +159,7 @@ const HomePage: FC<{ route: any; navigation: any }> = ({ navigation, route }) =>
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={[styles.header, { fontSize: width * 0.27 }]}>
-        {isProfileFetched ? Math.floor(remainingCalories) : ' '}
+        {isProfileFetched ? Math.floor(remaningCalories) : ' '}
       </Text>
 
       {inputs.map((input, index) => (
