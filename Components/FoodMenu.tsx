@@ -341,7 +341,7 @@ const FoodMenu: FC<{ route: any, navigation: any }> = ({ navigation, route }) =>
             setRecipes(filteredRecipes); // Update the displayed recipes
         } else {
             setIsVegan(false);
-            handleCalorieFilter(calorieRange); // Reapply calorie filter
+            setRecipes(allRecipes); // Reapply calorie filter
         }
     };
 
@@ -353,7 +353,7 @@ const FoodMenu: FC<{ route: any, navigation: any }> = ({ navigation, route }) =>
             setRecipes(filteredRecipes); // Update the displayed recipes
         } else {
             setIsVegetarian(false);
-            handleCalorieFilter(calorieRange); // Reapply calorie filter
+            setRecipes(allRecipes); // Reset to all recipes
         }
     };
 
@@ -388,11 +388,11 @@ const FoodMenu: FC<{ route: any, navigation: any }> = ({ navigation, route }) =>
                 <>
                     <View style={styles.dietFilterContainer}>
                         <TouchableOpacity style={styles.blackButton} onPress={handleVegetarianFilter}>
-                            <Text style={styles.buttonText}>{isVegetarian ? "הסר סינון צמחוני" : "צמחוני"}</Text>
+                            <Text style={styles.buttonText}>צמחוני</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.blackButton} onPress={handleVeganFilter}>
-                            <Text style={styles.buttonText}>{isVegan ? "הסר סינון טבעוני" : "טבעוני"}</Text>
+                            <Text style={styles.buttonText}>טבעוני</Text>
                         </TouchableOpacity>
                     </View>
 

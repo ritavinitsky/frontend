@@ -38,7 +38,7 @@ const UsersPostListPage: FC<{route:any, navigation: any, }> = ({navigation, rout
         console.log("screen in focus")
         navigation.setOptions(
             {
-                headerTitle: "Posts"
+                headerTitle: "הפוסטים שלי"
             }
         )
         })

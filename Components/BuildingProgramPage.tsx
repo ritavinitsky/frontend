@@ -129,15 +129,18 @@ const Program: FC<{ route: any, navigation: any }> = ({ navigation, route }) => 
   }
   
     const result = await UserApi.updateUser(
-      { id: route.params.user_id, email: user_email, name: user_name, age: user_age, dailyCal: res , remaningCal},
+      { id: route.params.user_id, email: user_email, name: user_name, age: user_age, dailyCal: res , remaningCal,weeks:targetTime},
       route.params.refreshToken
     );
   
     if (result) {
       console.log('הפרופיל עודכן בהצלחה');
+      alert("התכנית נבנתה בהצלחה, אנא התחבר/י על מנת להתחיל בתהליך")
     } else {
       console.log('שגיאה');
     }
+
+    navigation.navigate('LoginPage');
   };
 
   const renderValueAboveThumb = (value: number) => (

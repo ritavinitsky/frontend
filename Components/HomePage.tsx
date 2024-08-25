@@ -10,6 +10,8 @@ const HomePage: FC<{ route: any; navigation: any }> = ({ navigation, route }) =>
   const [initialCalories, setInitialCalories] = useState<number>(0);
   const [isProfileFetched, setIsProfileFetched] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | null>(null); // Added userId state
+  const [weeks, setWeeks] = useState<number>(0);
+  const [days, setDays] = useState<number>(0);
 
   const fullGlass = require('../assets/full.png');
   const emptyGlass = require('../assets/empty.png');
@@ -68,9 +70,27 @@ const HomePage: FC<{ route: any; navigation: any }> = ({ navigation, route }) =>
           cal: input.cal.toString(),
         }))
       : [{ food: '', cal: '' }];
+
+      // Ensure there's at least one empty input field
+        const hasEmptyField = updatedInputs.some(input => input.food === '' && input.cal === '');
+
+        if (updatedInputs.length > 0 && !hasEmptyField) {
+          updatedInputs.push({ food: '', cal: '' });
+        }
     
     setInputs(updatedInputs);
+    setWaterColors(result.currentUser.waterCups);
+    setWeeks(result.currentUser.weeks);
+
+    const weeksTodays = (result.currentUser.weeks * 7);
+    if(result.currentUser.days === 0){
+      setDays(weeksTodays);
+    }else{
+      setDays(result.currentUser.days);
+    }
+   
     console.log('inputs:', updatedInputs);
+    console.log('weeksTodays:', weeksTodays);
 
       } else {
         Alert.alert('Error', 'Failed to load user profile or daily calories data is missing');
@@ -80,12 +100,16 @@ const HomePage: FC<{ route: any; navigation: any }> = ({ navigation, route }) =>
     }
   };
 
+
   const saveData = useCallback(async () => {
     try {
       const currentDate = new Date();
       const isMidnight = currentDate.getHours() === 0 && currentDate.getMinutes() === 0;
 
       if (isMidnight) {
+        setWaterColors(Array(8).fill('blue'));
+        const decDay = days - 1;
+       
         if (remaningCalories === 0) {
           await axios.post('http://backend-69iy.onrender.com/prograss', {
             date: currentDate.toISOString(),
@@ -97,6 +121,8 @@ const HomePage: FC<{ route: any; navigation: any }> = ({ navigation, route }) =>
             userId,
             remaningCalories: 0,
             inputs: inputs,
+            waterColors: waterColors,
+            days: decDay,
           });
 
           await axios.post('http://backend-69iy.onrender.com/prograss', {
@@ -106,6 +132,7 @@ const HomePage: FC<{ route: any; navigation: any }> = ({ navigation, route }) =>
           });
         }
 
+        setDays(decDay);
         // Reset states
         setInputs([{ food: '', cal: '' }]);
         setWaterColors(Array(8).fill('blue'));
@@ -164,6 +191,8 @@ const HomePage: FC<{ route: any; navigation: any }> = ({ navigation, route }) =>
                 userId,
                 remaningCalories: newRemainingCalories,
                 input: recentInput,
+                waterColors: waterColors,
+                days: days,
               });
             }
   
@@ -194,6 +223,10 @@ const HomePage: FC<{ route: any; navigation: any }> = ({ navigation, route }) =>
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+       <Text style={styles.weekText}>
+       נותרו {days} ימים
+      </Text>
+
       <Text style={[styles.header, { fontSize: width * 0.27 }]}>
         {isProfileFetched ? Math.floor(remaningCalories) : ' '}
       </Text>
@@ -249,6 +282,12 @@ const styles = StyleSheet.create({
     padding: 20,
     height: '100%',
     backgroundColor: 'white',
+  },
+  weekText: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginBottom: 10,
+    color: 'black',
   },
   header: {
     fontWeight: 'bold',
