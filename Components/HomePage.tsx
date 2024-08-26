@@ -110,7 +110,7 @@ const HomePage: FC<{ route: any; navigation: any }> = ({ navigation, route }) =>
         setWaterColors(Array(8).fill('blue'));
         const decDay = days - 1;
        
-        if (remaningCalories === 0) {
+        if (remaningCalories === 0 || remaningCalories > 0) {
           await axios.post('http://backend-69iy.onrender.com/prograss', {
             date: currentDate.toISOString(),
             passed: "true",

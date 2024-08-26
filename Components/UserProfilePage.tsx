@@ -110,10 +110,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#007bff',
+    backgroundColor: '#000000',
   },
   backButton: {
-    backgroundColor: '#6c757d',
+    backgroundColor: '#000000',
   },
   buttonText: {
     color: '#fff',

@@ -16,6 +16,7 @@ import Timers from './Components/TimersPage';
 import Terms from './Components/TermsPage';
 import Calculators from './Components/CalculatorsPage';
 import Program from './Components/BuildingProgramPage';
+import Program2 from './Components/BuildingProgramPage2';
 import Forgot from './Components/Forgot';
 import Proccess from './Components/Proccess';
 import HomePage from './Components/HomePage';
@@ -31,6 +32,17 @@ const testConnection = async () => {
   } catch (error) {
     console.error('שגיאה בחיבור לשרת:', error);
   }
+};
+
+const LogoutScreen: FC<{ navigation: any }> = ({ navigation }) => {
+  useEffect(() => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'MainScreen' }], // Redirect to the login page
+    });
+  }, [navigation]);
+
+  return null; // This component does not render anything
 };
 
 const Stack = createNativeStackNavigator();
@@ -129,12 +141,7 @@ const DrawerNavigator: FC<{ route: any, navigation: any }> = ({ navigation, rout
       options={{ title: 'מחשבונים' }}
       initialParams={route.params}
     />
-     <Drawer.Screen
-      name="Program"
-      component={Program}
-      options={{ title: 'יצירת תכנית' }}
-      initialParams={route.params}
-    />
+  
     <Drawer.Screen
       name="About"
       component={Terms}
@@ -143,11 +150,15 @@ const DrawerNavigator: FC<{ route: any, navigation: any }> = ({ navigation, rout
     />
 
 <Drawer.Screen
-      name="forgot"
-      component={Forgot}
-      options={{ title: 'שכחתי סיסמה' }}
-      initialParams={route.params}
-    />
+        name="Logout"
+        component={LogoutScreen}
+        options={{ title: 'התנתקות' }}
+        listeners={{
+          drawerItemPress: () => {
+            // Handle any additional logic here if needed
+          },
+        }}
+      />
   </Drawer.Navigator>
 );
 

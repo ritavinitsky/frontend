@@ -20,10 +20,12 @@ const PostListRaw: FC<{
       <View style={styles.listRow}>
         <Text style={styles.title}>{post_title}</Text>
         <Text style={styles.userName}>מאת: {user_name}</Text>
-        <View style={styles.imageContainer}> 
-          {imgURL !== "" && <Image style={styles.postImage} source={{ uri: imgContent }} />}
-        </View>
-        <Text numberOfLines={2} style={styles.postText}>{post_text}</Text>  
+        {imgURL !== "url" && (
+          <View style={styles.imageContainer}> 
+            <Image style={styles.postImage} source={{ uri: imgContent }} />
+          </View>
+        )}
+        <Text numberOfLines={2} style={[styles.postText, imgURL === "url" && styles.noImageText]}>{post_text}</Text>  
       </View>
     </TouchableHighlight>
   )
@@ -46,19 +48,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end', // Aligns the image to the right side
     marginTop: 10,
   },
-  postImage1: {
-    height: 150, // Increased height for a larger image
-    width: 300,  // Increased width for a larger image
-    borderRadius: 10,
-    resizeMode: 'cover',
-  },
   postImage: {
     marginVertical: 10,
     height: 200, // Adjust height as needed
     width: '100%',
     borderRadius: 10,
     resizeMode: 'contain', // or 'cover' depending on your preference
-
   },
   title: {
     fontSize: 18,
@@ -77,6 +72,9 @@ const styles = StyleSheet.create({
     color: '#666',
     marginTop: 10,
     textAlign: 'right',
+  },
+  noImageText: {
+    marginTop: 0, // Removes margin when there is no image
   }
 });
 

@@ -14,8 +14,8 @@ const PostListRawEditable: FC<{
 }> = ({ user_name, post_title, post_text, imgURL, imgContent, id, onItemSelected, onItemDeleted, onItemChanged }) => {
 
   const handleSave = () => {
-    const titleElement = document.getElementById(post_title_$,{id}) as HTMLInputElement;
-    const textElement = document.getElementById(post_text_$,{id}) as HTMLInputElement;
+    const titleElement = document.getElementById(`post_title_${id}`) as HTMLInputElement;
+    const textElement = document.getElementById(`post_text_${id}`) as HTMLInputElement;
     if (titleElement && textElement) {
       onItemChanged(id, titleElement.value, textElement.value);
     }
@@ -31,12 +31,12 @@ const PostListRawEditable: FC<{
           <Text style={styles.buttonText}>שמור</Text>
         </TouchableOpacity>
       </View>
-      <TextInput id={post_title_$,{id}} style={styles.input} defaultValue={post_title} placeholder="הכנס כותרת" />
+      <TextInput id={`post_title_${id}`} style={styles.input} defaultValue={post_title} placeholder="הכנס כותרת" />
       <Text style={styles.userName}>מאת: {user_name}</Text>
-      {imgURL === "" 
-        ? null
-        : <Image style={styles.postImage} source={{ uri: imgContent }} resizeMode="contain" />}
-      <TextInput id={post_text_$,{id}} style={styles.input} defaultValue={post_text} placeholder="הכנס טקסט" />
+      {imgURL && imgURL !== "url" && (
+        <Image style={styles.postImage} source={{ uri: imgContent }} resizeMode="contain" />
+      )}
+      <TextInput id={`post_text_${id}`} style={styles.input} defaultValue={post_text} placeholder="הכנס טקסט" />
     </View>
   );
 };
@@ -72,13 +72,11 @@ const styles = StyleSheet.create({
   },
   postImage: {
     marginVertical: 10,
-    height: 200, // Adjust height as needed
+    height: 200,
     width: '100%',
     borderRadius: 10,
-    resizeMode: 'contain', // or 'cover' depending on your preference
-
+    resizeMode: 'contain',
   },
-
   userName: {
     marginBottom: 10,
     fontSize: 16,
@@ -99,3 +97,4 @@ const styles = StyleSheet.create({
 });
 
 export default PostListRawEditable;
+

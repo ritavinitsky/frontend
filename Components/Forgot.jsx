@@ -41,6 +41,8 @@ const Forgot: FC<{ navigation: any; route: any }> = ({ navigation, route }) => {
     } finally {
       setLoading(false); // Set loading to false after request is complete
     }
+
+    navigation.navigate('LoginPage');
   };
 
   return (

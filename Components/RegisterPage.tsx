@@ -13,6 +13,12 @@ const RegisterPage: FC<{ navigation: any }> = ({ navigation }) => {
   const passwordRegex = /^.{6,}$/; 
 
   const onSave = async () => {
+    if (!termsAccepted) {
+      Alert.alert("תנאי השימוש", "חייב לאשר את תנאי השימוש כדי להמשיך");
+      return;
+  }
+
+
     const user = {
         name,
         age,

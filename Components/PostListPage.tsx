@@ -23,7 +23,7 @@ const PostListPage: FC<{ route: any, navigation: any }> = ({ navigation, route }
             }
 
             navigation.setOptions({
-                headerTitle: "פורום",
+                headerTitle: "",
                 headerRight: () => (
                     <TouchableOpacity
                         onPress={() => navigation.navigate('PostAddPage', { refreshToken: route.params.refreshToken, userID: route.params.userID })}
